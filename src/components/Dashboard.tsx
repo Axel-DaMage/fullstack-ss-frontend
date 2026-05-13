@@ -1,4 +1,6 @@
 import React, { useState, useEffect } from 'react';
+import { useEvent } from '../lib/useEvent';
+import { Events } from '../lib/events';
 
 export interface DashboardProps {
   apiUrl?: string;
@@ -20,6 +22,12 @@ export const Dashboard: React.FC<DashboardProps> = ({ apiUrl = 'http://localhost
   useEffect(() => {
     fetchDashboard();
   }, []);
+
+  useEvent(Events.PET_CREATED, () => fetchDashboard());
+  useEvent(Events.PET_UPDATED, () => fetchDashboard());
+  useEvent(Events.PET_DELETED, () => fetchDashboard());
+  useEvent(Events.MATCH_CREATED, () => fetchDashboard());
+  useEvent(Events.MATCH_UPDATED, () => fetchDashboard());
 
   const fetchDashboard = async () => {
     try {

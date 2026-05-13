@@ -1,4 +1,6 @@
 import React, { useState, useEffect } from 'react';
+import { eventEmitter } from '../lib/EventEmitter';
+import { Events } from '../lib/events';
 
 export interface MatchesListProps {
   apiUrl?: string;
