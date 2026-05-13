@@ -9,3 +9,5 @@ export type { DashboardProps } from './Dashboard/Dashboard';
 
 export { MatchesList } from './MatchesList/MatchesList';
 export type { MatchesListProps } from './MatchesList/MatchesList';
+
+export { DevConsole } from './DevConsole';
