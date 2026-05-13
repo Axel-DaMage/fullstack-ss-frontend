@@ -1,5 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { PetCard, Pet } from './PetCard';
+import { eventEmitter } from '../lib/EventEmitter';
+import { Events } from '../lib/events';
 
 export interface PetsListProps {
   apiUrl?: string;
@@ -49,8 +51,41 @@ export const PetsList: React.FC<PetsListProps> = ({ apiUrl = 'http://localhost:8
     try {
       await fetch(`${apiUrl}/pets/${id}`, { method: 'DELETE' });
       setPets(pets.filter(p => p.id !== id));
+      eventEmitter.emit(Events.PET_DELETED, { id: String(id), name: '', type: '' });
     } catch (err) {
       alert('Error al eliminar');
+    }
+  };
+
+  const handleCreatePet = async (pet: Partial<ApiPet>) => {
+    try {
+      const response = await fetch(`${apiUrl}/pets`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(pet)
+      });
+      if (!response.ok) throw new Error('Error al crear');
+      const createdPet = await response.json();
+      setPets([...pets, createdPet]);
+      eventEmitter.emit(Events.PET_CREATED, { id: String(createdPet.id), name: createdPet.name, type: createdPet.status });
+    } catch (err) {
+      alert('Error al crear mascota');
+    }
+  };
+
+  const handleUpdatePet = async (id: number, pet: Partial<ApiPet>) => {
+    try {
+      const response = await fetch(`${apiUrl}/pets/${id}`, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(pet)
+      });
+      if (!response.ok) throw new Error('Error al actualizar');
+      const updatedPet = await response.json();
+      setPets(pets.map(p => p.id === id ? updatedPet : p));
+      eventEmitter.emit(Events.PET_UPDATED, { id: String(id), name: updatedPet.name, type: updatedPet.status });
+    } catch (err) {
+      alert('Error al actualizar mascota');
     }
   };
 
