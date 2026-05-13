@@ -4,6 +4,7 @@ import { Dashboard } from './components/Dashboard'
 import { PetsList } from './components/PetsList'
 import { PetCard } from './components/PetCard'
 import { MatchesList } from './components/MatchesList'
+import { DevConsole } from './components/DevConsole'
 
 const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:8081/api'
 
@@ -70,6 +71,7 @@ function App() {
           <button onClick={() => setCurrentView('dashboard')}>Dashboard</button>
           <button onClick={() => setCurrentView('pets')}>Mascotas</button>
           <button onClick={() => setCurrentView('matches')}>Matches</button>
+          <button onClick={() => setCurrentView('devconsole')} className="dev-btn">API Explorer</button>
         </div>
       </nav>
 
@@ -94,6 +96,10 @@ function App() {
 
         {currentView === 'matches' && (
           <MatchesList matches={matches} />
+        )}
+
+        {currentView === 'devconsole' && (
+          <DevConsole />
         )}
       </main>
     </div>
