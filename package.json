@@ -1,5 +1,24 @@
 {
   "name": "fullstack-ss-frontend",
   "version": "0.0.1",
-  "description": "Frontend React del proyecto Sanos y Salvos"
+  "description": "Frontend React del proyecto Sanos y Salvos",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview",
+    "lint": "eslint .",
+    "test": "vitest"
+  },
+  "dependencies": {
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0"
+  },
+  "devDependencies": {
+    "@vitejs/plugin-react": "^4.2.1",
+    "vite": "^5.0.0",
+    "vitest": "^1.0.0",
+    "@types/react": "^18.2.0",
+    "@types/react-dom": "^18.2.0"
+  }
 }
