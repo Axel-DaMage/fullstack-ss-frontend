@@ -1,0 +1,149 @@
+version: '3.8'
+
+services:
+  # MySQL Database
+  mysql-pet:
+    image: mysql:8.0
+    container_name: mysql-pet-service
+    environment:
+      MYSQL_ROOT_PASSWORD: password
+      MYSQL_DATABASE: pet_service
+    ports:
+      - "3306:3306"
+    volumes:
+      - mysql-pet-data:/var/lib/mysql
+    networks:
+      - sanossalvos-network
+
+  mysql-geo:
+    image: mysql:8.0
+    container_name: mysql-geo-service
+    environment:
+      MYSQL_ROOT_PASSWORD: password
+      MYSQL_DATABASE: geo_service
+    ports:
+      - "3307:3306"
+    volumes:
+      - mysql-geo-data:/var/lib/mysql
+    networks:
+      - sanossalvos-network
+
+  mysql-match:
+    image: mysql:8.0
+    container_name: mysql-match-service
+    environment:
+      MYSQL_ROOT_PASSWORD: password
+      MYSQL_DATABASE: match_service
+    ports:
+      - "3308:3306"
+    volumes:
+      - mysql-match-data:/var/lib/mysql
+    networks:
+      - sanossalvos-network
+
+  # Microservices
+  pet-service:
+    build:
+      context: ./fullstack-ss-pet-service
+      dockerfile: Dockerfile
+    container_name: pet-service
+    environment:
+      - SPRING_DATASOURCE_URL=jdbc:mysql://mysql-pet:3306/pet_service
+      - SPRING_DATASOURCE_USERNAME=root
+      - SPRING_DATASOURCE_PASSWORD=password
+      - SERVER_PORT=3001
+    ports:
+      - "3001:3001"
+    depends_on:
+      - mysql-pet
+    networks:
+      - sanossalvos-network
+
+  geo-service:
+    build:
+      context: ./fullstack-ss-geo-service
+      dockerfile: Dockerfile
+    container_name: geo-service
+    environment:
+      - SPRING_DATASOURCE_URL=jdbc:mysql://mysql-geo:3306/geo_service
+      - SPRING_DATASOURCE_USERNAME=root
+      - SPRING_DATASOURCE_PASSWORD=password
+      - SERVER_PORT=3002
+    ports:
+      - "3002:3002"
+    depends_on:
+      - mysql-geo
+    networks:
+      - sanossalvos-network
+
+  match-service:
+    build:
+      context: ./fullstack-ss-match-service
+      dockerfile: Dockerfile
+    container_name: match-service
+    environment:
+      - SPRING_DATASOURCE_URL=jdbc:mysql://mysql-match:3306/match_service
+      - SPRING_DATASOURCE_USERNAME=root
+      - SPRING_DATASOURCE_PASSWORD=password
+      - SERVER_PORT=3003
+    ports:
+      - "3003:3003"
+    depends_on:
+      - mysql-match
+    networks:
+      - sanossalvos-network
+
+  bff:
+    build:
+      context: ./fullstack-ss-bff
+      dockerfile: Dockerfile
+    container_name: bff-service
+    environment:
+      - PET_SERVICE_URL=http://pet-service:3001
+      - GEO_SERVICE_URL=http://geo-service:3002
+      - MATCH_SERVICE_URL=http://match-service:3003
+      - SERVER_PORT=8081
+    ports:
+      - "8081:8081"
+    depends_on:
+      - pet-service
+      - geo-service
+      - match-service
+    networks:
+      - sanossalvos-network
+
+  api-gateway:
+    build:
+      context: ./fullstack-ss-api-gateway
+      dockerfile: Dockerfile
+    container_name: api-gateway
+    ports:
+      - "8080:8080"
+    depends_on:
+      - bff
+      - pet-service
+      - geo-service
+      - match-service
+    networks:
+      - sanossalvos-network
+
+  frontend:
+    build:
+      context: ./fullstack-ss-frontend
+      dockerfile: Dockerfile
+    container_name: frontend
+    ports:
+      - "5173:80"
+    depends_on:
+      - api-gateway
+    networks:
+      - sanossalvos-network
+
+volumes:
+  mysql-pet-data:
+  mysql-geo-data:
+  mysql-match-data:
+
+networks:
+  sanossalvos-network:
+    driver: bridge
