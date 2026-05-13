@@ -30,12 +30,12 @@ export const PetsList: React.FC<PetsListProps> = ({ apiUrl = 'http://localhost:8
   const fetchPets = async () => {
     try {
       setLoading(true);
-      const url = filter === 'ALL' 
-        ? `${apiUrl}/pets` 
-        : `${apiUrl}/pets/search/status/${filter}`;
-      const response = await fetch(url);
+      const response = await fetch(`${apiUrl}/pets`);
       if (!response.ok) throw new Error('Error al cargar mascotas');
-      const data = await response.json();
+      let data = await response.json();
+      if (filter !== 'ALL') {
+        data = data.filter((p: ApiPet) => p.status === filter);
+      }
       setPets(data);
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Error desconocido');

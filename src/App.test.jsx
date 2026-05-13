@@ -28,16 +28,16 @@ describe('App', () => {
     expect(screen.getByText('Coincidencias')).toBeInTheDocument();
   });
 
-  it('navega a la sección de mascotas al hacer click', () => {
+  it('navega a la sección de mascotas al hacer click', async () => {
     render(<App />);
     fireEvent.click(screen.getByText('Mascotas'));
-    expect(screen.getByText('Cargando mascotas...')).toBeInTheDocument();
+    expect(await screen.findByText('Cargando mascotas...')).toBeInTheDocument();
   });
 
-  it('navega a la sección de coincidencias al hacer click', () => {
+  it('navega a la sección de coincidencias al hacer click', async () => {
     render(<App />);
     fireEvent.click(screen.getByText('Coincidencias'));
-    expect(screen.getByText('Cargando coincidencias...')).toBeInTheDocument();
+    expect(await screen.findByText('Cargando coincidencias...')).toBeInTheDocument();
   });
 
   it('el botón de dashboard está activo por defecto', () => {
@@ -54,8 +54,8 @@ describe('App', () => {
     expect(petsBtn.closest('button')).toHaveClass('active');
   });
 
-  it('renderiza el componente Dashboard por defecto', () => {
+  it('renderiza el componente Dashboard por defecto', async () => {
     render(<App />);
-    expect(screen.getByText('Panel de Control')).toBeInTheDocument();
+    expect(await screen.findByText('Panel de Control')).toBeInTheDocument();
   });
 });

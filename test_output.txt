@@ -1,0 +1,702 @@
+
+> fullstack-ss-frontend@0.0.1 test
+> vitest --run
+
+
+ RUN  v1.6.1 /home/d4mag3/Documents/Repos/fullstack-3/fullstack-ss-frontend
+
+ ✓ src/lib/EventEmitter.test.js  (8 tests) 20ms
+stderr | src/components/PetsList/PetsList.test.jsx > PetsList > renderiza loading inicialmente
+Warning: An update to PetsList inside a test was not wrapped in act(...).
+
+When testing, code that causes React state updates should be wrapped into act(...):
+
+act(() => {
+  /* fire events that update state */
+});
+/* assert on the output */
+
+This ensures that you're testing the behavior the user would see in the browser. Learn more at https://reactjs.org/link/wrap-tests-with-act
+    at PetsList (/home/d4mag3/Documents/Repos/fullstack-3/fullstack-ss-frontend/src/components/PetsList/PetsList.tsx:7:21)
+Warning: An update to PetsList inside a test was not wrapped in act(...).
+
+When testing, code that causes React state updates should be wrapped into act(...):
+
+act(() => {
+  /* fire events that update state */
+});
+/* assert on the output */
+
+This ensures that you're testing the behavior the user would see in the browser. Learn more at https://reactjs.org/link/wrap-tests-with-act
+    at PetsList (/home/d4mag3/Documents/Repos/fullstack-3/fullstack-ss-frontend/src/components/PetsList/PetsList.tsx:7:21)
+
+stderr | src/components/PetsList/PetsList.test.jsx > PetsList > filtra mascotas cuando se presiona botón
+Warning: An update to PetsList inside a test was not wrapped in act(...).
+
+When testing, code that causes React state updates should be wrapped into act(...):
+
+act(() => {
+  /* fire events that update state */
+});
+/* assert on the output */
+
+This ensures that you're testing the behavior the user would see in the browser. Learn more at https://reactjs.org/link/wrap-tests-with-act
+    at PetsList (/home/d4mag3/Documents/Repos/fullstack-3/fullstack-ss-frontend/src/components/PetsList/PetsList.tsx:7:21)
+Warning: An update to PetsList inside a test was not wrapped in act(...).
+
+When testing, code that causes React state updates should be wrapped into act(...):
+
+act(() => {
+  /* fire events that update state */
+});
+/* assert on the output */
+
+This ensures that you're testing the behavior the user would see in the browser. Learn more at https://reactjs.org/link/wrap-tests-with-act
+    at PetsList (/home/d4mag3/Documents/Repos/fullstack-3/fullstack-ss-frontend/src/components/PetsList/PetsList.tsx:7:21)
+
+ ✓ src/components/PetsList/PetsList.test.jsx  (4 tests) 248ms
+stderr | src/components/Dashboard/Dashboard.test.jsx > Dashboard > renderiza loading inicialmente
+Warning: An update to Dashboard inside a test was not wrapped in act(...).
+
+When testing, code that causes React state updates should be wrapped into act(...):
+
+act(() => {
+  /* fire events that update state */
+});
+/* assert on the output */
+
+This ensures that you're testing the behavior the user would see in the browser. Learn more at https://reactjs.org/link/wrap-tests-with-act
+    at Dashboard (/home/d4mag3/Documents/Repos/fullstack-3/fullstack-ss-frontend/src/components/Dashboard/Dashboard.tsx:5:22)
+Warning: An update to Dashboard inside a test was not wrapped in act(...).
+
+When testing, code that causes React state updates should be wrapped into act(...):
+
+act(() => {
+  /* fire events that update state */
+});
+/* assert on the output */
+
+This ensures that you're testing the behavior the user would see in the browser. Learn more at https://reactjs.org/link/wrap-tests-with-act
+    at Dashboard (/home/d4mag3/Documents/Repos/fullstack-3/fullstack-ss-frontend/src/components/Dashboard/Dashboard.tsx:5:22)
+
+stderr | src/components/MatchesList/MatchesList.test.jsx > MatchesList > renderiza loading inicialmente
+Warning: An update to MatchesList inside a test was not wrapped in act(...).
+
+When testing, code that causes React state updates should be wrapped into act(...):
+
+act(() => {
+  /* fire events that update state */
+});
+/* assert on the output */
+
+This ensures that you're testing the behavior the user would see in the browser. Learn more at https://reactjs.org/link/wrap-tests-with-act
+    at MatchesList (/home/d4mag3/Documents/Repos/fullstack-3/fullstack-ss-frontend/src/components/MatchesList/MatchesList.tsx:5:24)
+Warning: An update to MatchesList inside a test was not wrapped in act(...).
+
+When testing, code that causes React state updates should be wrapped into act(...):
+
+act(() => {
+  /* fire events that update state */
+});
+/* assert on the output */
+
+This ensures that you're testing the behavior the user would see in the browser. Learn more at https://reactjs.org/link/wrap-tests-with-act
+    at MatchesList (/home/d4mag3/Documents/Repos/fullstack-3/fullstack-ss-frontend/src/components/MatchesList/MatchesList.tsx:5:24)
+
+ ✓ src/components/Dashboard/Dashboard.test.jsx  (4 tests) 208ms
+stderr | src/components/MatchesList/MatchesList.test.jsx > MatchesList > filtra coincidencias cuando se presiona botón
+Warning: An update to MatchesList inside a test was not wrapped in act(...).
+
+When testing, code that causes React state updates should be wrapped into act(...):
+
+act(() => {
+  /* fire events that update state */
+});
+/* assert on the output */
+
+This ensures that you're testing the behavior the user would see in the browser. Learn more at https://reactjs.org/link/wrap-tests-with-act
+    at MatchesList (/home/d4mag3/Documents/Repos/fullstack-3/fullstack-ss-frontend/src/components/MatchesList/MatchesList.tsx:5:24)
+Warning: An update to MatchesList inside a test was not wrapped in act(...).
+
+When testing, code that causes React state updates should be wrapped into act(...):
+
+act(() => {
+  /* fire events that update state */
+});
+/* assert on the output */
+
+This ensures that you're testing the behavior the user would see in the browser. Learn more at https://reactjs.org/link/wrap-tests-with-act
+    at MatchesList (/home/d4mag3/Documents/Repos/fullstack-3/fullstack-ss-frontend/src/components/MatchesList/MatchesList.tsx:5:24)
+
+stderr | src/components/MatchesList/MatchesList.test.jsx > MatchesList > llama a run-automatic al hacer click
+Warning: An update to MatchesList inside a test was not wrapped in act(...).
+
+When testing, code that causes React state updates should be wrapped into act(...):
+
+act(() => {
+  /* fire events that update state */
+});
+/* assert on the output */
+
+This ensures that you're testing the behavior the user would see in the browser. Learn more at https://reactjs.org/link/wrap-tests-with-act
+    at MatchesList (/home/d4mag3/Documents/Repos/fullstack-3/fullstack-ss-frontend/src/components/MatchesList/MatchesList.tsx:5:24)
+
+stderr | src/App.test.jsx > App > renderiza el título de la aplicación
+Warning: An update to Dashboard inside a test was not wrapped in act(...).
+
+When testing, code that causes React state updates should be wrapped into act(...):
+
+act(() => {
+  /* fire events that update state */
+});
+/* assert on the output */
+
+This ensures that you're testing the behavior the user would see in the browser. Learn more at https://reactjs.org/link/wrap-tests-with-act
+    at Dashboard (/home/d4mag3/Documents/Repos/fullstack-3/fullstack-ss-frontend/src/components/Dashboard.tsx:9:22)
+    at main
+    at div
+    at App (/home/d4mag3/Documents/Repos/fullstack-3/fullstack-ss-frontend/src/App.jsx:19:63)
+Warning: An update to Dashboard inside a test was not wrapped in act(...).
+
+When testing, code that causes React state updates should be wrapped into act(...):
+
+act(() => {
+  /* fire events that update state */
+});
+/* assert on the output */
+
+This ensures that you're testing the behavior the user would see in the browser. Learn more at https://reactjs.org/link/wrap-tests-with-act
+    at Dashboard (/home/d4mag3/Documents/Repos/fullstack-3/fullstack-ss-frontend/src/components/Dashboard.tsx:9:22)
+    at main
+    at div
+    at App (/home/d4mag3/Documents/Repos/fullstack-3/fullstack-ss-frontend/src/App.jsx:19:63)
+Warning: An update to App inside a test was not wrapped in act(...).
+
+When testing, code that causes React state updates should be wrapped into act(...):
+
+act(() => {
+  /* fire events that update state */
+});
+/* assert on the output */
+
+This ensures that you're testing the behavior the user would see in the browser. Learn more at https://reactjs.org/link/wrap-tests-with-act
+    at App (/home/d4mag3/Documents/Repos/fullstack-3/fullstack-ss-frontend/src/App.jsx:19:63)
+Warning: An update to App inside a test was not wrapped in act(...).
+
+When testing, code that causes React state updates should be wrapped into act(...):
+
+act(() => {
+  /* fire events that update state */
+});
+/* assert on the output */
+
+This ensures that you're testing the behavior the user would see in the browser. Learn more at https://reactjs.org/link/wrap-tests-with-act
+    at App (/home/d4mag3/Documents/Repos/fullstack-3/fullstack-ss-frontend/src/App.jsx:19:63)
+Warning: An update to App inside a test was not wrapped in act(...).
+
+When testing, code that causes React state updates should be wrapped into act(...):
+
+act(() => {
+  /* fire events that update state */
+});
+/* assert on the output */
+
+This ensures that you're testing the behavior the user would see in the browser. Learn more at https://reactjs.org/link/wrap-tests-with-act
+    at App (/home/d4mag3/Documents/Repos/fullstack-3/fullstack-ss-frontend/src/App.jsx:19:63)
+
+stderr | src/App.test.jsx > App > navega a la sección de mascotas al hacer click
+Warning: An update to PetsList inside a test was not wrapped in act(...).
+
+When testing, code that causes React state updates should be wrapped into act(...):
+
+act(() => {
+  /* fire events that update state */
+});
+/* assert on the output */
+
+This ensures that you're testing the behavior the user would see in the browser. Learn more at https://reactjs.org/link/wrap-tests-with-act
+    at PetsList (/home/d4mag3/Documents/Repos/fullstack-3/fullstack-ss-frontend/src/components/PetsList.tsx:11:21)
+    at main
+    at div
+    at App (/home/d4mag3/Documents/Repos/fullstack-3/fullstack-ss-frontend/src/App.jsx:19:63)
+Warning: An update to PetsList inside a test was not wrapped in act(...).
+
+When testing, code that causes React state updates should be wrapped into act(...):
+
+act(() => {
+  /* fire events that update state */
+});
+/* assert on the output */
+
+This ensures that you're testing the behavior the user would see in the browser. Learn more at https://reactjs.org/link/wrap-tests-with-act
+    at PetsList (/home/d4mag3/Documents/Repos/fullstack-3/fullstack-ss-frontend/src/components/PetsList.tsx:11:21)
+    at main
+    at div
+    at App (/home/d4mag3/Documents/Repos/fullstack-3/fullstack-ss-frontend/src/App.jsx:19:63)
+Warning: An update to App inside a test was not wrapped in act(...).
+
+When testing, code that causes React state updates should be wrapped into act(...):
+
+act(() => {
+  /* fire events that update state */
+});
+/* assert on the output */
+
+This ensures that you're testing the behavior the user would see in the browser. Learn more at https://reactjs.org/link/wrap-tests-with-act
+    at App (/home/d4mag3/Documents/Repos/fullstack-3/fullstack-ss-frontend/src/App.jsx:19:63)
+Warning: An update to App inside a test was not wrapped in act(...).
+
+When testing, code that causes React state updates should be wrapped into act(...):
+
+act(() => {
+  /* fire events that update state */
+});
+/* assert on the output */
+
+This ensures that you're testing the behavior the user would see in the browser. Learn more at https://reactjs.org/link/wrap-tests-with-act
+    at App (/home/d4mag3/Documents/Repos/fullstack-3/fullstack-ss-frontend/src/App.jsx:19:63)
+Warning: An update to App inside a test was not wrapped in act(...).
+
+When testing, code that causes React state updates should be wrapped into act(...):
+
+act(() => {
+  /* fire events that update state */
+});
+/* assert on the output */
+
+This ensures that you're testing the behavior the user would see in the browser. Learn more at https://reactjs.org/link/wrap-tests-with-act
+    at App (/home/d4mag3/Documents/Repos/fullstack-3/fullstack-ss-frontend/src/App.jsx:19:63)
+
+ ❯ src/App.test.jsx  (7 tests | 5 failed) 265ms
+   ❯ src/App.test.jsx > App > renderiza los botones de navegación
+     → Unable to find an element with the text: Coincidencias. This could be because the text is broken up by multiple elements. In this case, you can provide a function for your text matcher to make your matcher more flexible.
+
+Ignored nodes: comments, script, style
+[36m<body>[39m
+  [36m<div>[39m
+    [36m<div[39m
+      [33mclass[39m=[32m"app"[39m
+    [36m>[39m
+      [36m<nav[39m
+        [33mclass[39m=[32m"navbar"[39m
+      [36m>[39m
+        [36m<h1>[39m
+          [0mSanos y Salvos[0m
+        [36m</h1>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"nav-links"[39m
+        [36m>[39m
+          [36m<button>[39m
+            [0mDashboard[0m
+          [36m</button>[39m
+          [36m<button>[39m
+            [0mMascotas[0m
+          [36m</button>[39m
+          [36m<button>[39m
+            [0mMatches[0m
+          [36m</button>[39m
+          [36m<button[39m
+            [33mclass[39m=[32m"dev-btn"[39m
+          [36m>[39m
+            [0mAPI Explorer[0m
+          [36m</button>[39m
+        [36m</div>[39m
+      [36m</nav>[39m
+      [36m<main[39m
+        [33mclass[39m=[32m"main-content"[39m
+      [36m>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"loading"[39m
+        [36m>[39m
+          [0mCargando...[0m
+        [36m</div>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"dashboard-loading"[39m
+        [36m>[39m
+          [0mCargando dashboard...[0m
+        [36m</div>[39m
+      [36m</main>[39m
+    [36m</div>[39m
+  [36m</div>[39m
+[36m</body>[39m
+   ❯ src/App.test.jsx > App > navega a la sección de coincidencias al hacer click
+     → Unable to find an element with the text: Coincidencias. This could be because the text is broken up by multiple elements. In this case, you can provide a function for your text matcher to make your matcher more flexible.
+
+Ignored nodes: comments, script, style
+[36m<body>[39m
+  [36m<div>[39m
+    [36m<div[39m
+      [33mclass[39m=[32m"app"[39m
+    [36m>[39m
+      [36m<nav[39m
+        [33mclass[39m=[32m"navbar"[39m
+      [36m>[39m
+        [36m<h1>[39m
+          [0mSanos y Salvos[0m
+        [36m</h1>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"nav-links"[39m
+        [36m>[39m
+          [36m<button>[39m
+            [0mDashboard[0m
+          [36m</button>[39m
+          [36m<button>[39m
+            [0mMascotas[0m
+          [36m</button>[39m
+          [36m<button>[39m
+            [0mMatches[0m
+          [36m</button>[39m
+          [36m<button[39m
+            [33mclass[39m=[32m"dev-btn"[39m
+          [36m>[39m
+            [0mAPI Explorer[0m
+          [36m</button>[39m
+        [36m</div>[39m
+      [36m</nav>[39m
+      [36m<main[39m
+        [33mclass[39m=[32m"main-content"[39m
+      [36m>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"loading"[39m
+        [36m>[39m
+          [0mCargando...[0m
+        [36m</div>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"dashboard-loading"[39m
+        [36m>[39m
+          [0mCargando dashboard...[0m
+        [36m</div>[39m
+      [36m</main>[39m
+    [36m</div>[39m
+  [36m</div>[39m
+[36m</body>[39m
+   ❯ src/App.test.jsx > App > el botón de dashboard está activo por defecto
+     → expect(element).toHaveClass("active")
+
+Expected the element to have class:
+  active
+Received:
+
+   ❯ src/App.test.jsx > App > cambia la clase active al navegar
+     → expect(element).toHaveClass("active")
+
+Expected the element to have class:
+  active
+Received:
+
+   ❯ src/App.test.jsx > App > renderiza el componente Dashboard por defecto
+     → Unable to find an element with the text: Panel de Control. This could be because the text is broken up by multiple elements. In this case, you can provide a function for your text matcher to make your matcher more flexible.
+
+Ignored nodes: comments, script, style
+[36m<body>[39m
+  [36m<div>[39m
+    [36m<div[39m
+      [33mclass[39m=[32m"app"[39m
+    [36m>[39m
+      [36m<nav[39m
+        [33mclass[39m=[32m"navbar"[39m
+      [36m>[39m
+        [36m<h1>[39m
+          [0mSanos y Salvos[0m
+        [36m</h1>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"nav-links"[39m
+        [36m>[39m
+          [36m<button>[39m
+            [0mDashboard[0m
+          [36m</button>[39m
+          [36m<button>[39m
+            [0mMascotas[0m
+          [36m</button>[39m
+          [36m<button>[39m
+            [0mMatches[0m
+          [36m</button>[39m
+          [36m<button[39m
+            [33mclass[39m=[32m"dev-btn"[39m
+          [36m>[39m
+            [0mAPI Explorer[0m
+          [36m</button>[39m
+        [36m</div>[39m
+      [36m</nav>[39m
+      [36m<main[39m
+        [33mclass[39m=[32m"main-content"[39m
+      [36m>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"loading"[39m
+        [36m>[39m
+          [0mCargando...[0m
+        [36m</div>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"dashboard-loading"[39m
+        [36m>[39m
+          [0mCargando dashboard...[0m
+        [36m</div>[39m
+      [36m</main>[39m
+    [36m</div>[39m
+  [36m</div>[39m
+[36m</body>[39m
+stderr | src/components/MatchesList/MatchesList.test.jsx > MatchesList > confirma coincidencia
+Warning: An update to MatchesList inside a test was not wrapped in act(...).
+
+When testing, code that causes React state updates should be wrapped into act(...):
+
+act(() => {
+  /* fire events that update state */
+});
+/* assert on the output */
+
+This ensures that you're testing the behavior the user would see in the browser. Learn more at https://reactjs.org/link/wrap-tests-with-act
+    at MatchesList (/home/d4mag3/Documents/Repos/fullstack-3/fullstack-ss-frontend/src/components/MatchesList/MatchesList.tsx:5:24)
+
+stderr | src/components/MatchesList/MatchesList.test.jsx > MatchesList > rechaza coincidencia
+Warning: An update to MatchesList inside a test was not wrapped in act(...).
+
+When testing, code that causes React state updates should be wrapped into act(...):
+
+act(() => {
+  /* fire events that update state */
+});
+/* assert on the output */
+
+This ensures that you're testing the behavior the user would see in the browser. Learn more at https://reactjs.org/link/wrap-tests-with-act
+    at MatchesList (/home/d4mag3/Documents/Repos/fullstack-3/fullstack-ss-frontend/src/components/MatchesList/MatchesList.tsx:5:24)
+
+ ✓ src/components/MatchesList/MatchesList.test.jsx  (6 tests) 332ms
+ ✓ src/components/PetCard/PetCard.test.jsx  (14 tests) 567ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 5 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/App.test.jsx > App > renderiza los botones de navegación
+TestingLibraryElementError: Unable to find an element with the text: Coincidencias. This could be because the text is broken up by multiple elements. In this case, you can provide a function for your text matcher to make your matcher more flexible.
+
+Ignored nodes: comments, script, style
+[36m<body>[39m
+  [36m<div>[39m
+    [36m<div[39m
+      [33mclass[39m=[32m"app"[39m
+    [36m>[39m
+      [36m<nav[39m
+        [33mclass[39m=[32m"navbar"[39m
+      [36m>[39m
+        [36m<h1>[39m
+          [0mSanos y Salvos[0m
+        [36m</h1>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"nav-links"[39m
+        [36m>[39m
+          [36m<button>[39m
+            [0mDashboard[0m
+          [36m</button>[39m
+          [36m<button>[39m
+            [0mMascotas[0m
+          [36m</button>[39m
+          [36m<button>[39m
+            [0mMatches[0m
+          [36m</button>[39m
+          [36m<button[39m
+            [33mclass[39m=[32m"dev-btn"[39m
+          [36m>[39m
+            [0mAPI Explorer[0m
+          [36m</button>[39m
+        [36m</div>[39m
+      [36m</nav>[39m
+      [36m<main[39m
+        [33mclass[39m=[32m"main-content"[39m
+      [36m>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"loading"[39m
+        [36m>[39m
+          [0mCargando...[0m
+        [36m</div>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"dashboard-loading"[39m
+        [36m>[39m
+          [0mCargando dashboard...[0m
+        [36m</div>[39m
+      [36m</main>[39m
+    [36m</div>[39m
+  [36m</div>[39m
+[36m</body>[39m
+ ❯ Object.getElementError node_modules/@testing-library/dom/dist/config.js:37:19
+ ❯ node_modules/@testing-library/dom/dist/query-helpers.js:76:38
+ ❯ node_modules/@testing-library/dom/dist/query-helpers.js:52:17
+ ❯ node_modules/@testing-library/dom/dist/query-helpers.js:95:19
+ ❯ src/App.test.jsx:28:19
+     26|     expect(screen.getByText('Dashboard')).toBeInTheDocument();
+     27|     expect(screen.getByText('Mascotas')).toBeInTheDocument();
+     28|     expect(screen.getByText('Coincidencias')).toBeInTheDocument();
+       |                   ^
+     29|   });
+     30| 
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/5]⎯
+
+ FAIL  src/App.test.jsx > App > navega a la sección de coincidencias al hacer click
+TestingLibraryElementError: Unable to find an element with the text: Coincidencias. This could be because the text is broken up by multiple elements. In this case, you can provide a function for your text matcher to make your matcher more flexible.
+
+Ignored nodes: comments, script, style
+[36m<body>[39m
+  [36m<div>[39m
+    [36m<div[39m
+      [33mclass[39m=[32m"app"[39m
+    [36m>[39m
+      [36m<nav[39m
+        [33mclass[39m=[32m"navbar"[39m
+      [36m>[39m
+        [36m<h1>[39m
+          [0mSanos y Salvos[0m
+        [36m</h1>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"nav-links"[39m
+        [36m>[39m
+          [36m<button>[39m
+            [0mDashboard[0m
+          [36m</button>[39m
+          [36m<button>[39m
+            [0mMascotas[0m
+          [36m</button>[39m
+          [36m<button>[39m
+            [0mMatches[0m
+          [36m</button>[39m
+          [36m<button[39m
+            [33mclass[39m=[32m"dev-btn"[39m
+          [36m>[39m
+            [0mAPI Explorer[0m
+          [36m</button>[39m
+        [36m</div>[39m
+      [36m</nav>[39m
+      [36m<main[39m
+        [33mclass[39m=[32m"main-content"[39m
+      [36m>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"loading"[39m
+        [36m>[39m
+          [0mCargando...[0m
+        [36m</div>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"dashboard-loading"[39m
+        [36m>[39m
+          [0mCargando dashboard...[0m
+        [36m</div>[39m
+      [36m</main>[39m
+    [36m</div>[39m
+  [36m</div>[39m
+[36m</body>[39m
+ ❯ Object.getElementError node_modules/@testing-library/dom/dist/config.js:37:19
+ ❯ node_modules/@testing-library/dom/dist/query-helpers.js:76:38
+ ❯ node_modules/@testing-library/dom/dist/query-helpers.js:52:17
+ ❯ node_modules/@testing-library/dom/dist/query-helpers.js:95:19
+ ❯ src/App.test.jsx:39:28
+     37|   it('navega a la sección de coincidencias al hacer click', () => {
+     38|     render(<App />);
+     39|     fireEvent.click(screen.getByText('Coincidencias'));
+       |                            ^
+     40|     expect(screen.getByText('Cargando coincidencias...')).toBeInTheDoc…
+     41|   });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/5]⎯
+
+ FAIL  src/App.test.jsx > App > el botón de dashboard está activo por defecto
+Error: expect(element).toHaveClass("active")
+
+Expected the element to have class:
+  active
+Received:
+
+ ❯ src/App.test.jsx:46:44
+     44|     render(<App />);
+     45|     const dashboardBtn = screen.getByText('Dashboard');
+     46|     expect(dashboardBtn.closest('button')).toHaveClass('active');
+       |                                            ^
+     47|   });
+     48| 
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/5]⎯
+
+ FAIL  src/App.test.jsx > App > cambia la clase active al navegar
+Error: expect(element).toHaveClass("active")
+
+Expected the element to have class:
+  active
+Received:
+
+ ❯ src/App.test.jsx:54:39
+     52|     fireEvent.click(screen.getByText('Mascotas'));
+     53|     const petsBtn = screen.getByText('Mascotas');
+     54|     expect(petsBtn.closest('button')).toHaveClass('active');
+       |                                       ^
+     55|   });
+     56| 
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[4/5]⎯
+
+ FAIL  src/App.test.jsx > App > renderiza el componente Dashboard por defecto
+TestingLibraryElementError: Unable to find an element with the text: Panel de Control. This could be because the text is broken up by multiple elements. In this case, you can provide a function for your text matcher to make your matcher more flexible.
+
+Ignored nodes: comments, script, style
+[36m<body>[39m
+  [36m<div>[39m
+    [36m<div[39m
+      [33mclass[39m=[32m"app"[39m
+    [36m>[39m
+      [36m<nav[39m
+        [33mclass[39m=[32m"navbar"[39m
+      [36m>[39m
+        [36m<h1>[39m
+          [0mSanos y Salvos[0m
+        [36m</h1>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"nav-links"[39m
+        [36m>[39m
+          [36m<button>[39m
+            [0mDashboard[0m
+          [36m</button>[39m
+          [36m<button>[39m
+            [0mMascotas[0m
+          [36m</button>[39m
+          [36m<button>[39m
+            [0mMatches[0m
+          [36m</button>[39m
+          [36m<button[39m
+            [33mclass[39m=[32m"dev-btn"[39m
+          [36m>[39m
+            [0mAPI Explorer[0m
+          [36m</button>[39m
+        [36m</div>[39m
+      [36m</nav>[39m
+      [36m<main[39m
+        [33mclass[39m=[32m"main-content"[39m
+      [36m>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"loading"[39m
+        [36m>[39m
+          [0mCargando...[0m
+        [36m</div>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"dashboard-loading"[39m
+        [36m>[39m
+          [0mCargando dashboard...[0m
+        [36m</div>[39m
+      [36m</main>[39m
+    [36m</div>[39m
+  [36m</div>[39m
+[36m</body>[39m
+ ❯ Object.getElementError node_modules/@testing-library/dom/dist/config.js:37:19
+ ❯ node_modules/@testing-library/dom/dist/query-helpers.js:76:38
+ ❯ node_modules/@testing-library/dom/dist/query-helpers.js:52:17
+ ❯ node_modules/@testing-library/dom/dist/query-helpers.js:95:19
+ ❯ src/App.test.jsx:59:19
+     57|   it('renderiza el componente Dashboard por defecto', () => {
+     58|     render(<App />);
+     59|     expect(screen.getByText('Panel de Control')).toBeInTheDocument();
+       |                   ^
+     60|   });
+     61| });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[5/5]⎯
+
+ Test Files  1 failed | 5 passed (6)
+      Tests  5 failed | 38 passed (43)
+   Start at  19:13:36
+   Duration  3.44s (transform 1.49s, setup 1.25s, collect 2.98s, tests 1.64s, environment 9.76s, prepare 1.24s)
+

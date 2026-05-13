@@ -68,10 +68,10 @@ function App() {
       <nav className="navbar">
         <h1>Sanos y Salvos</h1>
         <div className="nav-links">
-          <button onClick={() => setCurrentView('dashboard')}>Dashboard</button>
-          <button onClick={() => setCurrentView('pets')}>Mascotas</button>
-          <button onClick={() => setCurrentView('matches')}>Matches</button>
-          <button onClick={() => setCurrentView('devconsole')} className="dev-btn">API Explorer</button>
+          <button className={currentView === 'dashboard' ? 'active' : ''} onClick={() => setCurrentView('dashboard')}>Dashboard</button>
+          <button className={currentView === 'pets' ? 'active' : ''} onClick={() => setCurrentView('pets')}>Mascotas</button>
+          <button className={currentView === 'matches' ? 'active' : ''} onClick={() => setCurrentView('matches')}>Coincidencias</button>
+          <button className={currentView === 'devconsole' ? 'active dev-btn' : 'dev-btn'} onClick={() => setCurrentView('devconsole')}>API Explorer</button>
         </div>
       </nav>
 

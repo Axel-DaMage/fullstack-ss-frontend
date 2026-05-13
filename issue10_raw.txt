@@ -1,0 +1,15 @@
+## Descripción
+El componente  utiliza endpoints incorrectos para comunicarse con la API de matching.
+
+## Errores encontrados
+- Línea 31: usa  pero el endpoint correcto es 
+- Línea 44: usa  pero debería ser 
+- Línea 58: usa  pero debería ser 
+
+## Origen del problema
+El BFF () expone los endpoints en , no en .
+
+## Solución sugerida
+Cambiar los endpoints en :
+-  → 
+-  → 

@@ -25,12 +25,12 @@ export const MatchesList: React.FC<MatchesListProps> = ({ apiUrl = 'http://local
   const fetchMatches = async () => {
     try {
       setLoading(true);
-      const url = filter === 'ALL' 
-        ? `${apiUrl}/matches` 
-        : `${apiUrl}/matches/search/status/${filter}`;
-      const response = await fetch(url);
+      const response = await fetch(`${apiUrl}/matches`);
       if (!response.ok) throw new Error('Error al cargar matches');
-      const data = await response.json();
+      let data = await response.json();
+      if (filter !== 'ALL') {
+        data = data.filter((m: Match) => m.status === filter);
+      }
       setMatches(data);
     } catch (err) {
       console.error(err);

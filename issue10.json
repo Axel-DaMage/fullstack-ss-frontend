@@ -1,0 +1,78 @@
+{
+  "url": "https://api.github.com/repos/Axel-DaMage/fullstack-ss-frontend/issues/10",
+  "repository_url": "https://api.github.com/repos/Axel-DaMage/fullstack-ss-frontend",
+  "labels_url": "https://api.github.com/repos/Axel-DaMage/fullstack-ss-frontend/issues/10/labels{/name}",
+  "comments_url": "https://api.github.com/repos/Axel-DaMage/fullstack-ss-frontend/issues/10/comments",
+  "events_url": "https://api.github.com/repos/Axel-DaMage/fullstack-ss-frontend/issues/10/events",
+  "html_url": "https://github.com/Axel-DaMage/fullstack-ss-frontend/issues/10",
+  "id": 4441320414,
+  "node_id": "I_kwDOSb2vaM8AAAABCLkr3g",
+  "number": 10,
+  "title": "[BUG] Endpoints incorrectos en MatchesList.tsx",
+  "user": {
+    "login": "Axel-DaMage",
+    "id": 178504369,
+    "node_id": "U_kgDOCqPCsQ",
+    "avatar_url": "https://avatars.githubusercontent.com/u/178504369?v=4",
+    "gravatar_id": "",
+    "url": "https://api.github.com/users/Axel-DaMage",
+    "html_url": "https://github.com/Axel-DaMage",
+    "followers_url": "https://api.github.com/users/Axel-DaMage/followers",
+    "following_url": "https://api.github.com/users/Axel-DaMage/following{/other_user}",
+    "gists_url": "https://api.github.com/users/Axel-DaMage/gists{/gist_id}",
+    "starred_url": "https://api.github.com/users/Axel-DaMage/starred{/owner}{/repo}",
+    "subscriptions_url": "https://api.github.com/users/Axel-DaMage/subscriptions",
+    "organizations_url": "https://api.github.com/users/Axel-DaMage/orgs",
+    "repos_url": "https://api.github.com/users/Axel-DaMage/repos",
+    "events_url": "https://api.github.com/users/Axel-DaMage/events{/privacy}",
+    "received_events_url": "https://api.github.com/users/Axel-DaMage/received_events",
+    "type": "User",
+    "user_view_type": "public",
+    "site_admin": false
+  },
+  "labels": [
+
+  ],
+  "state": "open",
+  "locked": false,
+  "assignees": [
+
+  ],
+  "milestone": null,
+  "comments": 0,
+  "created_at": "2026-05-13T21:32:00Z",
+  "updated_at": "2026-05-13T21:32:00Z",
+  "closed_at": null,
+  "assignee": null,
+  "author_association": "OWNER",
+  "active_lock_reason": null,
+  "sub_issues_summary": {
+    "total": 0,
+    "completed": 0,
+    "percent_completed": 0
+  },
+  "issue_dependencies_summary": {
+    "blocked_by": 0,
+    "total_blocked_by": 0,
+    "blocking": 0,
+    "total_blocking": 0
+  },
+  "body": "## Descripción\nEl componente  utiliza endpoints incorrectos para comunicarse con la API de matching.\n\n## Errores encontrados\n- Línea 31: usa  pero el endpoint correcto es \n- Línea 44: usa  pero debería ser \n- Línea 58: usa  pero debería ser \n\n## Origen del problema\nEl BFF () expone los endpoints en , no en .\n\n## Solución sugerida\nCambiar los endpoints en :\n-  → \n-  → ",
+  "closed_by": null,
+  "reactions": {
+    "url": "https://api.github.com/repos/Axel-DaMage/fullstack-ss-frontend/issues/10/reactions",
+    "total_count": 0,
+    "+1": 0,
+    "-1": 0,
+    "laugh": 0,
+    "hooray": 0,
+    "confused": 0,
+    "heart": 0,
+    "rocket": 0,
+    "eyes": 0
+  },
+  "timeline_url": "https://api.github.com/repos/Axel-DaMage/fullstack-ss-frontend/issues/10/timeline",
+  "performed_via_github_app": null,
+  "state_reason": null,
+  "pinned_comment": null
+}
