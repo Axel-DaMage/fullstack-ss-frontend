@@ -101,3 +101,11 @@ La interfaz consume endpoints del backend para:
 - El sistema de eventos ayuda a mantener sincronizadas las secciones sin depender de recargas manuales.
 - Si agregas nuevas vistas o entidades, conviene reutilizar el patrón de componentes y eventos ya existente.
 
+---
+
+## Despliegue
+
+Este servicio se despliega automáticamente como parte del repositorio **api-gateway** a la instancia **Edge (t3.small)**.
+
+Ver [Setup Guide](../fullstack-ss-api-gateway/README.md#despliegue-en-aws-ec2) para detalles completos de la infraestructura.
+
