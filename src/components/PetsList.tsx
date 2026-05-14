@@ -19,7 +19,7 @@ interface ApiPet {
   photoUrl?: string;
 }
 
-export const PetsList: React.FC<PetsListProps> = ({ apiUrl = 'http://localhost:8081/api', onPetSelect }) => {
+export const PetsList: React.FC<PetsListProps> = ({ apiUrl = '/api', onPetSelect }) => {
   const [pets, setPets] = useState<ApiPet[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);

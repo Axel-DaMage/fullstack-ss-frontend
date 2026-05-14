@@ -7,7 +7,7 @@ import { MatchesList } from './components/MatchesList'
 import { DevConsole } from './components/DevConsole'
 import { Login } from './components/Login'
 
-const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:8081/api'
+const API_URL = import.meta.env.VITE_API_URL || '/api'
 
 function App() {
   const [currentView, setCurrentView] = useState('dashboard')

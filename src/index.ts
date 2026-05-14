@@ -13,7 +13,7 @@ export interface AppConfig {
 }
 
 export const createAppConfig = (options?: Partial<AppConfig>): AppConfig => ({
-  apiUrl: options?.apiUrl || 'http://localhost:8081/api',
+  apiUrl: options?.apiUrl || '/api',
   enableLogging: options?.enableLogging || false,
 });
 

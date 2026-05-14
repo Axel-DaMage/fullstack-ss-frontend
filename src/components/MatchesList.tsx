@@ -15,7 +15,7 @@ interface Match {
   createdAt: string;
 }
 
-export const MatchesList: React.FC<MatchesListProps> = ({ apiUrl = 'http://localhost:8081/api' }) => {
+export const MatchesList: React.FC<MatchesListProps> = ({ apiUrl = '/api' }) => {
   const [matches, setMatches] = useState<Match[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);

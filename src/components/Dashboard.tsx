@@ -15,7 +15,7 @@ interface DashboardData {
   locationsByZone?: Record<string, number>;
 }
 
-export const Dashboard: React.FC<DashboardProps> = ({ apiUrl = 'http://localhost:8081/api', onNavigate }) => {
+export const Dashboard: React.FC<DashboardProps> = ({ apiUrl = '/api', onNavigate }) => {
   const [data, setData] = useState<DashboardData | null>(null);
   const [loading, setLoading] = useState(true);
 
