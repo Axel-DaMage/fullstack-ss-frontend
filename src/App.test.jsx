@@ -2,8 +2,31 @@ import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
 import { render, screen, fireEvent } from '@testing-library/react';
 import App from './App';
 
+// Mock localStorage
+const localStorageMock = (() => {
+  let store = {};
+  return {
+    getItem: vi.fn((key) => store[key] || null),
+    setItem: vi.fn((key, value) => { store[key] = String(value); }),
+    removeItem: vi.fn((key) => { delete store[key]; }),
+    clear: vi.fn(() => { store = {}; }),
+  };
+})();
+
+Object.defineProperty(globalThis, 'localStorage', {
+  value: localStorageMock,
+  writable: true,
+});
+
 describe('App', () => {
   beforeEach(() => {
+    localStorageMock.clear();
+    // Simulate a logged-in user
+    localStorageMock.getItem.mockImplementation((key) => {
+      if (key === 'jwt_token') return 'fake-jwt-token-for-testing';
+      return null;
+    });
+
     vi.spyOn(global, 'fetch').mockImplementation(() =>
       Promise.resolve({
         ok: true,
@@ -14,6 +37,7 @@ describe('App', () => {
 
   afterEach(() => {
     vi.restoreAllMocks();
+    localStorageMock.clear();
   });
 
   it('renderiza el título de la aplicación', () => {
@@ -57,5 +81,16 @@ describe('App', () => {
   it('renderiza el componente Dashboard por defecto', async () => {
     render(<App />);
     expect(await screen.findByText('Panel de Control')).toBeInTheDocument();
+  });
+
+  it('muestra el botón de cerrar sesión', () => {
+    render(<App />);
+    expect(screen.getByText('Cerrar Sesión')).toBeInTheDocument();
+  });
+
+  it('muestra login cuando no hay token', () => {
+    localStorageMock.getItem.mockImplementation(() => null);
+    render(<App />);
+    expect(screen.getByText('Inicia sesión para continuar')).toBeInTheDocument();
   });
 });

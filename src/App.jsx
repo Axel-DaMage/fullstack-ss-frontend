@@ -5,6 +5,7 @@ import { PetsList } from './components/PetsList'
 import { PetCard } from './components/PetCard'
 import { MatchesList } from './components/MatchesList'
 import { DevConsole } from './components/DevConsole'
+import { Login } from './components/Login'
 
 const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:8081/api'
 
@@ -14,17 +15,28 @@ function App() {
   const [matches, setMatches] = useState([])
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState(null)
+  const [token, setToken] = useState(localStorage.getItem('jwt_token'))
 
   useEffect(() => {
-    fetchData()
-  }, [])
+    if (token) {
+      fetchData()
+    }
+  }, [token])
+
+  const getAuthHeaders = () => {
+    const headers = { 'Content-Type': 'application/json' }
+    if (token) {
+      headers['Authorization'] = `Bearer ${token}`
+    }
+    return headers
+  }
 
   const fetchData = async () => {
     setLoading(true)
     try {
       const [petsRes, matchesRes] = await Promise.all([
-        fetch(`${API_URL}/pets`),
-        fetch(`${API_URL}/matches`)
+        fetch(`${API_URL}/pets`, { headers: getAuthHeaders() }),
+        fetch(`${API_URL}/matches`, { headers: getAuthHeaders() })
       ])
       const petsData = await petsRes.json()
       const matchesData = await matchesRes.json()
@@ -41,7 +53,7 @@ function App() {
     try {
       const res = await fetch(`${API_URL}/pets`, {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        headers: getAuthHeaders(),
         body: JSON.stringify(pet)
       })
       if (res.ok) {
@@ -54,13 +66,32 @@ function App() {
 
   const handleDeletePet = async (id) => {
     try {
-      const res = await fetch(`${API_URL}/pets/${id}`, { method: 'DELETE' })
+      const res = await fetch(`${API_URL}/pets/${id}`, {
+        method: 'DELETE',
+        headers: getAuthHeaders()
+      })
       if (res.ok) {
         fetchData()
       }
     } catch (err) {
       setError('Error deleting pet')
     }
+  }
+
+  const handleLogin = (newToken) => {
+    setToken(newToken)
+  }
+
+  const handleLogout = () => {
+    localStorage.removeItem('jwt_token')
+    setToken(null)
+    setPets([])
+    setMatches([])
+    setCurrentView('dashboard')
+  }
+
+  if (!token) {
+    return <Login onLogin={handleLogin} />
   }
 
   return (
@@ -72,6 +103,7 @@ function App() {
           <button className={currentView === 'pets' ? 'active' : ''} onClick={() => setCurrentView('pets')}>Mascotas</button>
           <button className={currentView === 'matches' ? 'active' : ''} onClick={() => setCurrentView('matches')}>Coincidencias</button>
           <button className={currentView === 'devconsole' ? 'active dev-btn' : 'dev-btn'} onClick={() => setCurrentView('devconsole')}>API Explorer</button>
+          <button className="logout-btn" onClick={handleLogout}>Cerrar Sesión</button>
         </div>
       </nav>
 
