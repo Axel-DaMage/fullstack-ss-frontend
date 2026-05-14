@@ -914,3 +914,369 @@ body {
   .dual-view { grid-template-columns: 1fr; }
   .stats-grid { grid-template-columns: 1fr; }
 }
+
+/* New View Container Styles */
+.view-container {
+  max-width: 1400px;
+  margin: 0 auto;
+}
+
+.view-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+
+.view-header h2 {
+  margin: 0;
+  font-size: 24px;
+  color: var(--text);
+}
+
+.controls {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.auto-refresh-toggle {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  color: var(--subtext1);
+  font-size: 14px;
+  cursor: pointer;
+}
+
+.auto-refresh-toggle input {
+  accent-color: var(--blue);
+}
+
+.controls select {
+  background: var(--surface0);
+  color: var(--text);
+  border: 1px solid var(--surface1);
+  padding: 6px 10px;
+  border-radius: 6px;
+  font-size: 14px;
+}
+
+.refresh-btn, .add-btn {
+  background: var(--blue);
+  color: var(--crust);
+  border: none;
+  padding: 8px 16px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-weight: 500;
+  font-size: 14px;
+  transition: opacity 0.2s;
+}
+
+.refresh-btn:hover, .add-btn:hover {
+  opacity: 0.9;
+}
+
+.add-btn {
+  background: var(--green);
+}
+
+.stats-cards {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 16px;
+  margin-bottom: 24px;
+}
+
+.stat-card {
+  background: var(--surface0);
+  border-radius: 12px;
+  padding: 20px;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  transition: transform 0.2s;
+}
+
+.stat-card:hover {
+  transform: translateY(-2px);
+}
+
+.stat-icon {
+  font-size: 40px;
+}
+
+.stat-content {
+  display: flex;
+  flex-direction: column;
+}
+
+.stat-value {
+  font-size: 32px;
+  font-weight: 700;
+  color: var(--text);
+}
+
+.stat-label {
+  color: var(--subtext1);
+  font-size: 14px;
+}
+
+.stat-card.lost .stat-value { color: var(--red); }
+.stat-card.found .stat-value { color: var(--green); }
+.stat-card.matches .stat-value { color: var(--yellow); }
+.stat-card.locations .stat-value { color: var(--blue); }
+
+.zones-section {
+  background: var(--surface0);
+  border-radius: 12px;
+  padding: 20px;
+}
+
+.zones-section h3 {
+  margin: 0 0 16px 0;
+  color: var(--text);
+}
+
+.zones-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+
+.zone-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  background: var(--surface1);
+  padding: 12px 16px;
+  border-radius: 8px;
+}
+
+.zone-name {
+  color: var(--text);
+  font-size: 14px;
+}
+
+.zone-badge {
+  background: var(--blue);
+  color: var(--crust);
+  padding: 4px 12px;
+  border-radius: 12px;
+  font-size: 13px;
+  font-weight: 600;
+}
+
+/* Data Table */
+.data-table {
+  background: var(--surface0);
+  border-radius: 12px;
+  overflow: hidden;
+}
+
+.data-table table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.data-table th {
+  background: var(--crust);
+  color: var(--subtext1);
+  padding: 14px 16px;
+  text-align: left;
+  font-weight: 600;
+  font-size: 13px;
+  text-transform: uppercase;
+}
+
+.data-table td {
+  padding: 14px 16px;
+  border-bottom: 1px solid var(--surface1);
+  color: var(--text);
+  font-size: 14px;
+}
+
+.data-table tr:last-child td {
+  border-bottom: none;
+}
+
+.data-table tr:hover {
+  background: var(--surface1);
+}
+
+.status-badge {
+  display: inline-block;
+  padding: 4px 10px;
+  border-radius: 12px;
+  font-size: 12px;
+  font-weight: 600;
+  text-transform: uppercase;
+}
+
+.status-badge.lost { background: var(--red); color: var(--crust); }
+.status-badge.found { background: var(--green); color: var(--crust); }
+.status-badge.pending { background: var(--yellow); color: var(--crust); }
+.status-badge.confirmed { background: var(--green); color: var(--crust); }
+.status-badge.rejected { background: var(--red); color: var(--crust); }
+
+.edit-btn, .delete-btn, .confirm-btn, .reject-btn {
+  padding: 8px 16px;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 13px;
+  font-weight: 500;
+  min-width: 80px;
+  min-height: 36px;
+  margin-right: 8px;
+}
+
+.edit-btn { background: var(--blue); color: var(--crust); }
+.delete-btn { background: var(--red); color: var(--crust); }
+.confirm-btn { background: var(--green); color: var(--crust); }
+.reject-btn { background: var(--yellow); color: var(--crust); }
+
+.edit-btn:hover, .delete-btn:hover, .confirm-btn:hover, .reject-btn:hover {
+  opacity: 0.9;
+}
+
+/* Modal */
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.7);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+}
+
+.modal {
+  background: var(--surface0);
+  border-radius: 16px;
+  padding: 24px;
+  width: 90%;
+  max-width: 500px;
+  max-height: 90vh;
+  overflow-y: auto;
+}
+
+.modal h3 {
+  margin: 0 0 20px 0;
+  color: var(--text);
+  font-size: 20px;
+}
+
+.modal form {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.form-row {
+  display: flex;
+  gap: 12px;
+}
+
+.form-row input, .form-row select, .modal textarea {
+  flex: 1;
+  padding: 12px;
+  background: var(--surface1);
+  border: 1px solid var(--surface2);
+  border-radius: 8px;
+  color: var(--text);
+  font-size: 14px;
+}
+
+.modal textarea {
+  resize: vertical;
+}
+
+.form-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 12px;
+  margin-top: 8px;
+}
+
+.cancel-btn, .save-btn {
+  padding: 10px 20px;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: 500;
+}
+
+.cancel-btn {
+  background: var(--surface1);
+  color: var(--text);
+}
+
+.save-btn {
+  background: var(--green);
+  color: var(--crust);
+}
+
+.loading {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 200px;
+  color: var(--subtext1);
+  font-size: 16px;
+  gap: 10px;
+}
+
+.spin {
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+.section-icon {
+  width: 24px;
+  height: 24px;
+  margin-right: 8px;
+  vertical-align: middle;
+}
+
+.nav-links button {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.nav-links button span {
+  margin-left: 2px;
+}
+
+.stat-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--subtext1);
+}
+
+.refresh-btn, .add-btn, .edit-btn, .delete-btn, .confirm-btn, .reject-btn, .cancel-btn, .save-btn {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.last-updated {
+  color: var(--subtext0);
+  font-size: 13px;
+  margin-bottom: 16px;
+  margin-left: 4px;
+}

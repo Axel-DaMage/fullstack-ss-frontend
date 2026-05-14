@@ -17,8 +17,7 @@ export const Dashboard: React.FC<DashboardProps> = ({ apiUrl = '/api', onNavigat
   const [data, setData] = useState<DashboardData | null>(null);
   const [loading, setLoading] = useState(true);
   const [lastUpdated, setLastUpdated] = useState<Date>(new Date());
-  const [refreshInterval, setRefreshInterval] = useState(3000);
-  const [autoRefresh, setAutoRefresh] = useState(true);
+  const REFRESH_INTERVAL = 1000;
   const intervalRef = useRef<NodeJS.Timeout | null>(null);
 
   const fetchDashboard = async () => {
@@ -43,14 +42,11 @@ export const Dashboard: React.FC<DashboardProps> = ({ apiUrl = '/api', onNavigat
   }, []);
 
   useEffect(() => {
-    if (intervalRef.current) clearInterval(intervalRef.current);
-    if (autoRefresh) {
-      intervalRef.current = setInterval(fetchDashboard, refreshInterval);
-    }
+    intervalRef.current = setInterval(fetchDashboard, REFRESH_INTERVAL);
     return () => {
       if (intervalRef.current) clearInterval(intervalRef.current);
     };
-  }, [autoRefresh, refreshInterval]);
+  }, []);
 
   const renderFormatted = (d: DashboardData) => {
     return (
@@ -81,12 +77,14 @@ export const Dashboard: React.FC<DashboardProps> = ({ apiUrl = '/api', onNavigat
           <div className="zones-section">
             <h3>Reportes por Zona</h3>
             <div className="zones-list">
-              {Object.entries(d.locationsByZone).map(([zone, count]) => (
-                <div key={zone} className="zone-item">
-                  <span className="zone-name">{zone}</span>
-                  <span className="zone-badge">{count}</span>
-                </div>
-              ))}
+              {Object.entries(d.locationsByZone)
+                .sort((a, b) => b[1] - a[1])
+                .map(([zone, count]) => (
+                  <div key={zone} className="zone-item">
+                    <span className="zone-name">{zone}</span>
+                    <span className="zone-badge">{count}</span>
+                  </div>
+                ))}
             </div>
           </div>
         )}
@@ -101,25 +99,6 @@ export const Dashboard: React.FC<DashboardProps> = ({ apiUrl = '/api', onNavigat
       <div className="dashboard-header">
         <h2 className="dashboard-title">Panel de Control</h2>
         <div className="dashboard-controls">
-          <label className="auto-refresh-toggle">
-            <input
-              type="checkbox"
-              checked={autoRefresh}
-              onChange={(e) => setAutoRefresh(e.target.checked)}
-            />
-            Auto-refresh
-          </label>
-          <select
-            value={refreshInterval}
-            onChange={(e) => setRefreshInterval(Number(e.target.value))}
-            disabled={!autoRefresh}
-          >
-            <option value={1000}>1s</option>
-            <option value={2000}>2s</option>
-            <option value={3000}>3s</option>
-            <option value={5000}>5s</option>
-            <option value={10000}>10s</option>
-          </select>
           <button onClick={fetchDashboard} className="refresh-btn">Actualizar</button>
         </div>
         <div className="last-updated">
