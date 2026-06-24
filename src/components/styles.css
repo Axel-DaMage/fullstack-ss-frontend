@@ -460,6 +460,14 @@ tbody tr.empty td {
   border-top: 1px solid var(--border-light);
 }
 
+/* Validation error */
+.error {
+  color: #e74c3c;
+  font-size: 0.85em;
+  margin-top: 0.25rem;
+  display: block;
+}
+
 /* Loading */
 .loading {
   display: flex;

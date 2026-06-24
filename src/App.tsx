@@ -222,11 +222,26 @@ function PetsView() {
 }
 
 function PetForm({ pet, onClose, onSave }: { pet: any; onClose: () => void; onSave: () => void }) {
-  const [form, setForm] = useState({ name: pet?.name || '', race: pet?.race || '', color: pet?.color || '', size: pet?.size || '', status: pet?.status || 'PERDIDO', description: pet?.description || '' })
+  const [form, setForm] = useState({ name: pet?.name || '', race: pet?.race || '', color: pet?.color || '', size: pet?.size || '', status: pet?.status || 'PERDIDO', description: pet?.description || '', contactEmail: pet?.contact?.email || '' })
+  const [errors, setErrors] = useState<Record<string, string>>({})
   const [saving, setSaving] = useState(false)
 
+  const validate = (): boolean => {
+    const newErrors: Record<string, string> = {}
+    if (!form.name?.trim()) newErrors.name = 'El nombre es obligatorio'
+    if (!form.race?.trim()) newErrors.race = 'La raza es obligatoria'
+    if (!form.color?.trim()) newErrors.color = 'El color es obligatorio'
+    if (form.contactEmail && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(form.contactEmail)) {
+      newErrors.contactEmail = 'Email invalido'
+    }
+    setErrors(newErrors)
+    return Object.keys(newErrors).length === 0
+  }
+
   const submit = async (e: React.FormEvent) => {
-    e.preventDefault(); setSaving(true)
+    e.preventDefault()
+    if (!validate()) return
+    setSaving(true)
     try {
       const url = pet ? `${API}/pets/${pet.id}` : `${API}/pets`
       const r = await fetch(url, { method: pet ? 'PUT' : 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(form) })
@@ -239,17 +254,18 @@ function PetForm({ pet, onClose, onSave }: { pet: any; onClose: () => void; onSa
     <div className="modal-overlay" onClick={onClose}>
       <div className="modal" onClick={e => e.stopPropagation()}>
         <h3>{pet ? 'Editar mascota' : 'Nueva mascota'}</h3>
-        <form onSubmit={submit}>
+        <form onSubmit={submit} noValidate>
           <div className="form-row">
-            <div className="form-group"><label>Nombre</label><input value={form.name} onChange={e => setForm({...form, name: e.target.value})} required /></div>
-            <div className="form-group"><label>Raza</label><input value={form.race} onChange={e => setForm({...form, race: e.target.value})} /></div>
+            <div className="form-group"><label>Nombre</label><input value={form.name} onChange={e => setForm({...form, name: e.target.value})} />{errors.name && <span className="error">{errors.name}</span>}</div>
+            <div className="form-group"><label>Raza</label><input value={form.race} onChange={e => setForm({...form, race: e.target.value})} />{errors.race && <span className="error">{errors.race}</span>}</div>
           </div>
           <div className="form-row">
-            <div className="form-group"><label>Color</label><input value={form.color} onChange={e => setForm({...form, color: e.target.value})} /></div>
+            <div className="form-group"><label>Color</label><input value={form.color} onChange={e => setForm({...form, color: e.target.value})} />{errors.color && <span className="error">{errors.color}</span>}</div>
             <div className="form-group"><label>Tamaño</label><select value={form.size} onChange={e => setForm({...form, size: e.target.value})}><option value="">Seleccionar</option><option value="PEQUENO">Pequeño</option><option value="MEDIANO">Mediano</option><option value="GRANDE">Grande</option></select></div>
           </div>
+          <div className="form-group"><label>Email de contacto</label><input type="email" value={form.contactEmail} onChange={e => setForm({...form, contactEmail: e.target.value})} placeholder="opcional@email.com" />{errors.contactEmail && <span className="error">{errors.contactEmail}</span>}</div>
           <div className="form-group"><label>Estado</label><select value={form.status} onChange={e => setForm({...form, status: e.target.value})}><option value="PERDIDO">Perdido</option><option value="ENCONTRADO">Encontrado</option></select></div>
-          <div className="form-group"><label>Descripción</label><textarea value={form.description} onChange={e => setForm({...form, description: e.target.value})} rows={3} /></div>
+          <div className="form-group"><label>Descripcion</label><textarea value={form.description} onChange={e => setForm({...form, description: e.target.value})} rows={3} /></div>
           <div className="form-actions">
             <button type="button" className="btn" onClick={onClose}>Cancelar</button>
             <button type="submit" className="btn btn-primary" disabled={saving}>{saving ? 'Guardando...' : 'Guardar'}</button>
