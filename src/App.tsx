@@ -1,8 +1,13 @@
 import { useState, useEffect } from 'react'
-import { BarChart3, PawPrint, Link2, MapPin, RefreshCw, Check, X, Zap } from 'lucide-react'
+import { BarChart3, PawPrint, Link2, MapPin, RefreshCw, Check, X, Zap, Home, Globe, User, Search } from 'lucide-react'
 import './components/styles.css'
+import PublicHome from './components/PublicHome'
+import ReportForm from './components/ReportForm'
+import PetGallery from './components/PetGallery'
+import InteractiveMap from './components/InteractiveMap'
+import UserAccount from './components/UserAccount'
 
-type Section = 'dashboard' | 'pets' | 'matches' | 'locations'
+type Section = 'home' | 'report' | 'gallery' | 'radar' | 'account' | 'admin-dashboard' | 'admin-pets' | 'admin-matches' | 'admin-locations'
 const API = '/api'
 
 const statusLabel = (s?: string) => {
@@ -18,52 +23,78 @@ const statusLabel = (s?: string) => {
   }
 }
 
-const ICON: Record<Section, React.ReactNode> = {
-  dashboard: <BarChart3 size={16} />,
-  pets: <PawPrint size={16} />,
-  matches: <Link2 size={16} />,
-  locations: <MapPin size={16} />,
-}
-const navItems: { id: Section; label: string }[] = [
-  { id: 'dashboard', label: 'Dashboard' },
-  { id: 'pets', label: 'Mascotas' },
-  { id: 'matches', label: 'Coincidencias' },
-  { id: 'locations', label: 'Ubicaciones' },
-]
-
 export default function App() {
-  const [section, setSection] = useState<Section>('dashboard')
+  const [section, setSection] = useState<Section>('home')
   const [zoneFilter, setZoneFilter] = useState<string | null>(null)
+  const [reportStatus, setReportStatus] = useState<string | undefined>(undefined)
+
+  const navigate = (s: string, data?: any) => {
+    if (s === 'report') {
+      setReportStatus(data?.status)
+      setSection('report')
+    } else {
+      setSection(s as Section)
+      setZoneFilter(null)
+    }
+  }
 
   const goToZone = (zone: string) => {
     setZoneFilter(zone)
-    setSection('locations')
+    setSection('admin-locations')
   }
+
+  const isAdmin = section.startsWith('admin-')
 
   return (
     <div className="app">
       <aside className="sidebar">
         <div className="sidebar-header">
           <h1>Sanos y Salvos</h1>
-          <div className="subtitle">API Console</div>
+          <div className="subtitle">{isAdmin ? 'Admin Console' : 'Plataforma'}</div>
         </div>
         <nav className="sidebar-nav">
-          {navItems.map(n => (
-            <button key={n.id} className={`nav-item${section === n.id ? ' active' : ''}`} onClick={() => { setSection(n.id); setZoneFilter(null) }}>
-              <span className="nav-icon">{ICON[n.id]}</span>
-              <span>{n.label}</span>
-            </button>
-          ))}
+          <div className="nav-section-label">Plataforma</div>
+          <button className={`nav-item${section === 'home' ? ' active' : ''}`} onClick={() => setSection('home')}>
+            <span className="nav-icon"><Home size={16} /></span><span>Inicio</span>
+          </button>
+          <button className={`nav-item${section === 'gallery' ? ' active' : ''}`} onClick={() => setSection('gallery')}>
+            <span className="nav-icon"><Search size={16} /></span><span>Galería</span>
+          </button>
+          <button className={`nav-item${section === 'radar' ? ' active' : ''}`} onClick={() => setSection('radar')}>
+            <span className="nav-icon"><Globe size={16} /></span><span>Radar</span>
+          </button>
+          <button className={`nav-item${section === 'account' ? ' active' : ''}`} onClick={() => setSection('account')}>
+            <span className="nav-icon"><User size={16} /></span><span>Mi Cuenta</span>
+          </button>
+
+          <div className="nav-section-label" style={{ marginTop: 16 }}>Admin</div>
+          <button className={`nav-item${section === 'admin-dashboard' ? ' active' : ''}`} onClick={() => setSection('admin-dashboard')}>
+            <span className="nav-icon"><BarChart3 size={16} /></span><span>Dashboard</span>
+          </button>
+          <button className={`nav-item${section === 'admin-pets' ? ' active' : ''}`} onClick={() => setSection('admin-pets')}>
+            <span className="nav-icon"><PawPrint size={16} /></span><span>Mascotas</span>
+          </button>
+          <button className={`nav-item${section === 'admin-matches' ? ' active' : ''}`} onClick={() => setSection('admin-matches')}>
+            <span className="nav-icon"><Link2 size={16} /></span><span>Coincidencias</span>
+          </button>
+          <button className={`nav-item${section === 'admin-locations' ? ' active' : ''}`} onClick={() => setSection('admin-locations')}>
+            <span className="nav-icon"><MapPin size={16} /></span><span>Ubicaciones</span>
+          </button>
         </nav>
         <div className="sidebar-footer">
           <SeedButton />
         </div>
       </aside>
-      <main className="main">
-        {section === 'dashboard' && <DashboardView onNavigate={goToZone} />}
-        {section === 'pets' && <PetsView />}
-        {section === 'matches' && <MatchesView />}
-        {section === 'locations' && <LocationsView zoneFilter={zoneFilter} />}
+      <main className={`main ${!isAdmin ? 'main-public' : ''}`}>
+        {section === 'home' && <PublicHome onNavigate={navigate} />}
+        {section === 'report' && <ReportForm initialStatus={reportStatus} onBack={() => setSection('home')} onSaved={() => setSection('home')} />}
+        {section === 'gallery' && <PetGallery onBack={() => setSection('home')} />}
+        {section === 'radar' && <InteractiveMap onBack={() => setSection('home')} />}
+        {section === 'account' && <UserAccount onBack={() => setSection('home')} />}
+        {section === 'admin-dashboard' && <DashboardView onNavigate={goToZone} />}
+        {section === 'admin-pets' && <PetsView />}
+        {section === 'admin-matches' && <MatchesView />}
+        {section === 'admin-locations' && <LocationsView zoneFilter={zoneFilter} />}
       </main>
     </div>
   )
@@ -222,11 +253,26 @@ function PetsView() {
 }
 
 function PetForm({ pet, onClose, onSave }: { pet: any; onClose: () => void; onSave: () => void }) {
-  const [form, setForm] = useState({ name: pet?.name || '', race: pet?.race || '', color: pet?.color || '', size: pet?.size || '', status: pet?.status || 'PERDIDO', description: pet?.description || '' })
+  const [form, setForm] = useState({ name: pet?.name || '', race: pet?.race || '', color: pet?.color || '', size: pet?.size || '', status: pet?.status || 'PERDIDO', description: pet?.description || '', contactEmail: pet?.contact?.email || '' })
+  const [errors, setErrors] = useState<Record<string, string>>({})
   const [saving, setSaving] = useState(false)
 
+  const validate = (): boolean => {
+    const newErrors: Record<string, string> = {}
+    if (!form.name?.trim()) newErrors.name = 'El nombre es obligatorio'
+    if (!form.race?.trim()) newErrors.race = 'La raza es obligatoria'
+    if (!form.color?.trim()) newErrors.color = 'El color es obligatorio'
+    if (form.contactEmail && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(form.contactEmail)) {
+      newErrors.contactEmail = 'Email invalido'
+    }
+    setErrors(newErrors)
+    return Object.keys(newErrors).length === 0
+  }
+
   const submit = async (e: React.FormEvent) => {
-    e.preventDefault(); setSaving(true)
+    e.preventDefault()
+    if (!validate()) return
+    setSaving(true)
     try {
       const url = pet ? `${API}/pets/${pet.id}` : `${API}/pets`
       const r = await fetch(url, { method: pet ? 'PUT' : 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(form) })
@@ -239,17 +285,18 @@ function PetForm({ pet, onClose, onSave }: { pet: any; onClose: () => void; onSa
     <div className="modal-overlay" onClick={onClose}>
       <div className="modal" onClick={e => e.stopPropagation()}>
         <h3>{pet ? 'Editar mascota' : 'Nueva mascota'}</h3>
-        <form onSubmit={submit}>
+        <form onSubmit={submit} noValidate>
           <div className="form-row">
-            <div className="form-group"><label>Nombre</label><input value={form.name} onChange={e => setForm({...form, name: e.target.value})} required /></div>
-            <div className="form-group"><label>Raza</label><input value={form.race} onChange={e => setForm({...form, race: e.target.value})} /></div>
+            <div className="form-group"><label>Nombre</label><input value={form.name} onChange={e => setForm({...form, name: e.target.value})} />{errors.name && <span className="error">{errors.name}</span>}</div>
+            <div className="form-group"><label>Raza</label><input value={form.race} onChange={e => setForm({...form, race: e.target.value})} />{errors.race && <span className="error">{errors.race}</span>}</div>
           </div>
           <div className="form-row">
-            <div className="form-group"><label>Color</label><input value={form.color} onChange={e => setForm({...form, color: e.target.value})} /></div>
+            <div className="form-group"><label>Color</label><input value={form.color} onChange={e => setForm({...form, color: e.target.value})} />{errors.color && <span className="error">{errors.color}</span>}</div>
             <div className="form-group"><label>Tamaño</label><select value={form.size} onChange={e => setForm({...form, size: e.target.value})}><option value="">Seleccionar</option><option value="PEQUENO">Pequeño</option><option value="MEDIANO">Mediano</option><option value="GRANDE">Grande</option></select></div>
           </div>
+          <div className="form-group"><label>Email de contacto</label><input type="email" value={form.contactEmail} onChange={e => setForm({...form, contactEmail: e.target.value})} placeholder="opcional@email.com" />{errors.contactEmail && <span className="error">{errors.contactEmail}</span>}</div>
           <div className="form-group"><label>Estado</label><select value={form.status} onChange={e => setForm({...form, status: e.target.value})}><option value="PERDIDO">Perdido</option><option value="ENCONTRADO">Encontrado</option></select></div>
-          <div className="form-group"><label>Descripción</label><textarea value={form.description} onChange={e => setForm({...form, description: e.target.value})} rows={3} /></div>
+          <div className="form-group"><label>Descripcion</label><textarea value={form.description} onChange={e => setForm({...form, description: e.target.value})} rows={3} /></div>
           <div className="form-actions">
             <button type="button" className="btn" onClick={onClose}>Cancelar</button>
             <button type="submit" className="btn btn-primary" disabled={saving}>{saving ? 'Guardando...' : 'Guardar'}</button>

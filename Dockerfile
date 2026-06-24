@@ -6,7 +6,7 @@ WORKDIR /app
 
 # Copiar dependencias primero para cachear
 COPY package*.json ./
-RUN npm ci --production=false
+RUN npm ci --production=false --legacy-peer-deps
 
 # Variable de entorno para el build (se inyecta desde GitHub Actions)
 ARG VITE_API_URL
