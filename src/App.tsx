@@ -278,9 +278,9 @@ function MatchesView() {
 
   useEffect(() => { fetchMatches() }, [])
 
-  const confirm = async (id: number) => { try { await fetch(`${API}/matches/${id}/confirm`, { method: 'PUT' }); fetchMatches() } catch { alert('Error') } }
-  const reject = async (id: number) => { try { await fetch(`${API}/matches/${id}/reject`, { method: 'PUT' }); fetchMatches() } catch { alert('Error') } }
-  const del = async (id: number) => { if (!confirm('Eliminar coincidencia?')) return; try { await fetch(`${API}/matches/${id}`, { method: 'DELETE' }); fetchMatches() } catch { alert('Error') } }
+  const confirmMatch = async (id: number) => { try { await fetch(`${API}/matches/${id}/confirm`, { method: 'PUT' }); fetchMatches() } catch { alert('Error') } }
+  const rejectMatch = async (id: number) => { try { await fetch(`${API}/matches/${id}/reject`, { method: 'PUT' }); fetchMatches() } catch { alert('Error') } }
+  const del = async (id: number) => { if (!window.confirm('Eliminar coincidencia?')) return; try { await fetch(`${API}/matches/${id}`, { method: 'DELETE' }); fetchMatches() } catch { alert('Error') } }
   const runAuto = async () => { try { await fetch(`${API}/matches/run-automatic`, { method: 'POST' }); fetchMatches() } catch { alert('Error') } }
 
   if (loading && matches.length === 0) return <div className="loading">Cargando coincidencias...</div>
@@ -320,7 +320,7 @@ function MatchesView() {
                 <td>{m.porcentajeCoincidencia != null ? `${m.porcentajeCoincidencia}%` : (m.similarity ? `${(m.similarity * 100).toFixed(0)}%` : '-')}</td>
                 <td><span className={`status-badge ${(m.status || 'pendiente').toLowerCase()}`}>{statusLabel(m.status)}</span></td>
                 <td>
-                  {(!m.status || m.status === 'PENDIENTE') && <><button className="btn btn-success" onClick={() => confirm(m.id)}><Check size={14} /> Confirmar</button><button className="btn btn-warning" onClick={() => reject(m.id)}><X size={14} /> Rechazar</button></>}
+                  {(!m.status || m.status === 'PENDIENTE') && <><button className="btn btn-success" onClick={() => confirmMatch(m.id)}><Check size={14} /> Confirmar</button><button className="btn btn-warning" onClick={() => rejectMatch(m.id)}><X size={14} /> Rechazar</button></>}
                   <button className="btn btn-danger" onClick={() => del(m.id)}>Eliminar</button>
                 </td>
               </tr>
