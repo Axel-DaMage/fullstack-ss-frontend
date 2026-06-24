@@ -1,8 +1,13 @@
 import { useState, useEffect } from 'react'
-import { BarChart3, PawPrint, Link2, MapPin, RefreshCw, Check, X, Zap } from 'lucide-react'
+import { BarChart3, PawPrint, Link2, MapPin, RefreshCw, Check, X, Zap, Home, Globe, User, Search } from 'lucide-react'
 import './components/styles.css'
+import PublicHome from './components/PublicHome'
+import ReportForm from './components/ReportForm'
+import PetGallery from './components/PetGallery'
+import InteractiveMap from './components/InteractiveMap'
+import UserAccount from './components/UserAccount'
 
-type Section = 'dashboard' | 'pets' | 'matches' | 'locations'
+type Section = 'home' | 'report' | 'gallery' | 'radar' | 'account' | 'admin-dashboard' | 'admin-pets' | 'admin-matches' | 'admin-locations'
 const API = '/api'
 
 const statusLabel = (s?: string) => {
@@ -18,52 +23,78 @@ const statusLabel = (s?: string) => {
   }
 }
 
-const ICON: Record<Section, React.ReactNode> = {
-  dashboard: <BarChart3 size={16} />,
-  pets: <PawPrint size={16} />,
-  matches: <Link2 size={16} />,
-  locations: <MapPin size={16} />,
-}
-const navItems: { id: Section; label: string }[] = [
-  { id: 'dashboard', label: 'Dashboard' },
-  { id: 'pets', label: 'Mascotas' },
-  { id: 'matches', label: 'Coincidencias' },
-  { id: 'locations', label: 'Ubicaciones' },
-]
-
 export default function App() {
-  const [section, setSection] = useState<Section>('dashboard')
+  const [section, setSection] = useState<Section>('home')
   const [zoneFilter, setZoneFilter] = useState<string | null>(null)
+  const [reportStatus, setReportStatus] = useState<string | undefined>(undefined)
+
+  const navigate = (s: string, data?: any) => {
+    if (s === 'report') {
+      setReportStatus(data?.status)
+      setSection('report')
+    } else {
+      setSection(s as Section)
+      setZoneFilter(null)
+    }
+  }
 
   const goToZone = (zone: string) => {
     setZoneFilter(zone)
-    setSection('locations')
+    setSection('admin-locations')
   }
+
+  const isAdmin = section.startsWith('admin-')
 
   return (
     <div className="app">
       <aside className="sidebar">
         <div className="sidebar-header">
           <h1>Sanos y Salvos</h1>
-          <div className="subtitle">API Console</div>
+          <div className="subtitle">{isAdmin ? 'Admin Console' : 'Plataforma'}</div>
         </div>
         <nav className="sidebar-nav">
-          {navItems.map(n => (
-            <button key={n.id} className={`nav-item${section === n.id ? ' active' : ''}`} onClick={() => { setSection(n.id); setZoneFilter(null) }}>
-              <span className="nav-icon">{ICON[n.id]}</span>
-              <span>{n.label}</span>
-            </button>
-          ))}
+          <div className="nav-section-label">Plataforma</div>
+          <button className={`nav-item${section === 'home' ? ' active' : ''}`} onClick={() => setSection('home')}>
+            <span className="nav-icon"><Home size={16} /></span><span>Inicio</span>
+          </button>
+          <button className={`nav-item${section === 'gallery' ? ' active' : ''}`} onClick={() => setSection('gallery')}>
+            <span className="nav-icon"><Search size={16} /></span><span>Galería</span>
+          </button>
+          <button className={`nav-item${section === 'radar' ? ' active' : ''}`} onClick={() => setSection('radar')}>
+            <span className="nav-icon"><Globe size={16} /></span><span>Radar</span>
+          </button>
+          <button className={`nav-item${section === 'account' ? ' active' : ''}`} onClick={() => setSection('account')}>
+            <span className="nav-icon"><User size={16} /></span><span>Mi Cuenta</span>
+          </button>
+
+          <div className="nav-section-label" style={{ marginTop: 16 }}>Admin</div>
+          <button className={`nav-item${section === 'admin-dashboard' ? ' active' : ''}`} onClick={() => setSection('admin-dashboard')}>
+            <span className="nav-icon"><BarChart3 size={16} /></span><span>Dashboard</span>
+          </button>
+          <button className={`nav-item${section === 'admin-pets' ? ' active' : ''}`} onClick={() => setSection('admin-pets')}>
+            <span className="nav-icon"><PawPrint size={16} /></span><span>Mascotas</span>
+          </button>
+          <button className={`nav-item${section === 'admin-matches' ? ' active' : ''}`} onClick={() => setSection('admin-matches')}>
+            <span className="nav-icon"><Link2 size={16} /></span><span>Coincidencias</span>
+          </button>
+          <button className={`nav-item${section === 'admin-locations' ? ' active' : ''}`} onClick={() => setSection('admin-locations')}>
+            <span className="nav-icon"><MapPin size={16} /></span><span>Ubicaciones</span>
+          </button>
         </nav>
         <div className="sidebar-footer">
           <SeedButton />
         </div>
       </aside>
-      <main className="main">
-        {section === 'dashboard' && <DashboardView onNavigate={goToZone} />}
-        {section === 'pets' && <PetsView />}
-        {section === 'matches' && <MatchesView />}
-        {section === 'locations' && <LocationsView zoneFilter={zoneFilter} />}
+      <main className={`main ${!isAdmin ? 'main-public' : ''}`}>
+        {section === 'home' && <PublicHome onNavigate={navigate} />}
+        {section === 'report' && <ReportForm initialStatus={reportStatus} onBack={() => setSection('home')} onSaved={() => setSection('home')} />}
+        {section === 'gallery' && <PetGallery onBack={() => setSection('home')} />}
+        {section === 'radar' && <InteractiveMap onBack={() => setSection('home')} />}
+        {section === 'account' && <UserAccount onBack={() => setSection('home')} />}
+        {section === 'admin-dashboard' && <DashboardView onNavigate={goToZone} />}
+        {section === 'admin-pets' && <PetsView />}
+        {section === 'admin-matches' && <MatchesView />}
+        {section === 'admin-locations' && <LocationsView zoneFilter={zoneFilter} />}
       </main>
     </div>
   )
