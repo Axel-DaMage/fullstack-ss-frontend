@@ -1,256 +1,189 @@
-import { useState, useEffect, useRef } from 'react';
-import { 
-  LayoutDashboard, Dog, MapPin, GitMerge, 
-  RefreshCw, Plus, Edit, Trash2, Check, X,
-  Loader2
-} from 'lucide-react';
-import './components/styles.css';
+import { useState, useEffect } from 'react'
+import { BarChart3, PawPrint, Link2, MapPin, RefreshCw, Check, X, Zap } from 'lucide-react'
+import './components/styles.css'
 
-type Section = 'dashboard' | 'pets' | 'matches' | 'locations';
+type Section = 'dashboard' | 'pets' | 'matches' | 'locations'
+const API = '/api'
 
-const API_BASE = '/api';
-
-const translateStatus = (status?: string): string => {
-  switch (status) {
-    case 'LOST': return 'Perdido';
-    case 'FOUND': return 'Encontrado';
-    case 'PENDING': return 'Pendiente';
-    case 'CONFIRMED': return 'Confirmada';
-    case 'REJECTED': return 'Rechazada';
-    default: return status || '-';
+const statusLabel = (s?: string) => {
+  switch (s) {
+    case 'PERDIDO': return 'Perdido'
+    case 'ENCONTRADO': return 'Encontrado'
+    case 'LOST': return 'Perdido'
+    case 'FOUND': return 'Encontrado'
+    case 'PENDIENTE': return 'Pendiente'
+    case 'CONFIRMED': return 'Confirmada'
+    case 'REJECTED': return 'Rechazada'
+    default: return s || '-'
   }
-};
+}
 
-function App() {
-  const [currentSection, setCurrentSection] = useState<Section>('dashboard');
+const ICON: Record<Section, React.ReactNode> = {
+  dashboard: <BarChart3 size={16} />,
+  pets: <PawPrint size={16} />,
+  matches: <Link2 size={16} />,
+  locations: <MapPin size={16} />,
+}
+const navItems: { id: Section; label: string }[] = [
+  { id: 'dashboard', label: 'Dashboard' },
+  { id: 'pets', label: 'Mascotas' },
+  { id: 'matches', label: 'Coincidencias' },
+  { id: 'locations', label: 'Ubicaciones' },
+]
 
-  const navItems: { id: Section; label: string; icon: React.ReactNode }[] = [
-    { id: 'dashboard', label: 'Dashboard', icon: <LayoutDashboard size={18} /> },
-    { id: 'pets', label: 'Mascotas', icon: <Dog size={18} /> },
-    { id: 'matches', label: 'Coincidencias', icon: <GitMerge size={18} /> },
-    { id: 'locations', label: 'Ubicaciones', icon: <MapPin size={18} /> },
-  ];
+export default function App() {
+  const [section, setSection] = useState<Section>('dashboard')
+  const [zoneFilter, setZoneFilter] = useState<string | null>(null)
+
+  const goToZone = (zone: string) => {
+    setZoneFilter(zone)
+    setSection('locations')
+  }
 
   return (
     <div className="app">
-      <nav className="navbar">
-        <h1 className="app-title">Sanos y Salvos</h1>
-        <div className="nav-links">
-          {navItems.map(item => (
-            <button
-              key={item.id}
-              className={currentSection === item.id ? 'active' : ''}
-              onClick={() => setCurrentSection(item.id)}
-            >
-              {item.icon}
-              <span>{item.label}</span>
+      <aside className="sidebar">
+        <div className="sidebar-header">
+          <h1>Sanos y Salvos</h1>
+          <div className="subtitle">API Console</div>
+        </div>
+        <nav className="sidebar-nav">
+          {navItems.map(n => (
+            <button key={n.id} className={`nav-item${section === n.id ? ' active' : ''}`} onClick={() => { setSection(n.id); setZoneFilter(null) }}>
+              <span className="nav-icon">{ICON[n.id]}</span>
+              <span>{n.label}</span>
             </button>
           ))}
+        </nav>
+        <div className="sidebar-footer">
+          <SeedButton />
         </div>
-      </nav>
-      <main className="app-content">
-        {currentSection === 'dashboard' && <DashboardView baseUrl={API_BASE} />}
-        {currentSection === 'pets' && <PetsView baseUrl={API_BASE} />}
-        {currentSection === 'matches' && <MatchesView baseUrl={API_BASE} />}
-        {currentSection === 'locations' && <LocationsView baseUrl={API_BASE} />}
+      </aside>
+      <main className="main">
+        {section === 'dashboard' && <DashboardView onNavigate={goToZone} />}
+        {section === 'pets' && <PetsView />}
+        {section === 'matches' && <MatchesView />}
+        {section === 'locations' && <LocationsView zoneFilter={zoneFilter} />}
       </main>
     </div>
-  );
+  )
 }
 
-function DashboardView({ baseUrl }: { baseUrl: string }) {
-  const [data, setData] = useState<any>(null);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
-  const [autoRefresh, setAutoRefresh] = useState(true);
-  const [refreshInterval, setRefreshInterval] = useState(3000);
-  const [lastUpdated, setLastUpdated] = useState<Date>(new Date());
-  const intervalRef = useRef<NodeJS.Timeout | null>(null);
+function SeedButton() {
+  const [status, setStatus] = useState<'idle' | 'loading' | 'done'>('idle')
 
-  const fetchDashboard = async () => {
-    setLoading(true);
-    setError(null);
+  const seed = async () => {
+    setStatus('loading')
     try {
-      const res = await fetch(`${baseUrl}/dashboard`);
-      if (!res.ok) throw new Error(`Error ${res.status}`);
-      const json = await res.json();
-      setData(json);
-      setLastUpdated(new Date());
-    } catch (err: any) {
-      setError(err.message);
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  useEffect(() => {
-    fetchDashboard();
-  }, []);
-
-  useEffect(() => {
-    if (intervalRef.current) clearInterval(intervalRef.current);
-    if (autoRefresh) {
-      intervalRef.current = setInterval(fetchDashboard, refreshInterval);
-    }
-    return () => {
-      if (intervalRef.current) clearInterval(intervalRef.current);
-    };
-  }, [autoRefresh, refreshInterval]);
-
-  if (loading && !data) return <div className="loading"><Loader2 className="spin" /> Cargando...</div>;
+      await fetch(`${API}/pets`, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ name: 'Luna', race: 'Labrador', color: 'Marron', size: 'GRANDE', status: 'PERDIDO', description: 'Perro perdido en el parque' }) })
+      await fetch(`${API}/pets`, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ name: 'Max', race: 'Pastor Aleman', color: 'Negro', size: 'GRANDE', status: 'PERDIDO', description: 'Desaparecio en la feria' }) })
+      await fetch(`${API}/pets`, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ name: 'Mia', race: 'Labrador', color: 'Marron', size: 'MEDIANO', status: 'ENCONTRADO', description: 'Encontrada en la calle' }) })
+      await fetch(`${API}/pets`, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ name: 'Toby', race: 'Chihuahua', color: 'Blanco', size: 'PEQUENO', status: 'ENCONTRADO', description: 'Recogido en la plaza' }) })
+      await fetch(`${API}/pets`, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ name: 'Rocky', race: 'Pastor Aleman', color: 'Negro', size: 'GRANDE', status: 'ENCONTRADO', description: 'Aparecio en la estacion de bomberos' }) })
+      await fetch(`${API}/pets`, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ name: 'Simba', race: 'Chihuahua', color: 'Blanco', size: 'PEQUENO', status: 'PERDIDO', description: 'Se escapo del departamento' }) })
+      await fetch(`${API}/matches/run-automatic`, { method: 'POST' })
+      setStatus('done')
+      setTimeout(() => setStatus('idle'), 2000)
+    } catch { setStatus('idle') }
+  }
 
   return (
-    <div className="view-container">
-      <div className="view-header">
-        <h2><LayoutDashboard className="section-icon" /> Panel de Control</h2>
-        <div className="controls">
-          <label className="auto-refresh-toggle">
-            <input type="checkbox" checked={autoRefresh} onChange={e => setAutoRefresh(e.target.checked)} />
-            Auto-actualizar
-          </label>
-          <select value={refreshInterval} onChange={e => setRefreshInterval(Number(e.target.value))} disabled={!autoRefresh}>
-            <option value={1000}>1 seg</option>
-            <option value={2000}>2 seg</option>
-            <option value={3000}>3 seg</option>
-            <option value={5000}>5 seg</option>
-            <option value={10000}>10 seg</option>
-          </select>
-          <button onClick={fetchDashboard} className="refresh-btn">
-            <RefreshCw size={16} /> Actualizar
-          </button>
+    <button className="seed-btn" onClick={seed} disabled={status === 'loading'}>
+      {status === 'loading' ? 'Cargando...' : status === 'done' ? <><Check size={14} /> Datos creados</> : <><RefreshCw size={14} /> Cargar datos demo</>}
+    </button>
+  )
+}
+
+function DashboardView({ onNavigate }: { onNavigate: (zone: string) => void }) {
+  const [data, setData] = useState<any>(null)
+  const [loading, setLoading] = useState(true)
+  const [error, setError] = useState<string | null>(null)
+  const [refresh, setRefresh] = useState(false)
+
+  const fetchData = async () => {
+    setLoading(true); setError(null)
+    try {
+      const r = await fetch(`${API}/dashboard`)
+      if (!r.ok) throw new Error(`Error ${r.status}`)
+      setData(await r.json())
+    } catch (e: any) { setError(e.message) }
+    finally { setLoading(false) }
+  }
+
+  useEffect(() => { fetchData() }, [])
+
+  if (loading && !data) return <div className="loading">Cargando dashboard...</div>
+
+  return (
+    <>
+      <div className="main-header">
+        <h2>Dashboard</h2>
+        <div className="header-actions">
+          <label className="toggle-label"><input type="checkbox" checked={refresh} onChange={e => setRefresh(e.target.checked)} /> Auto</label>
+          <button className="btn" onClick={fetchData}><RefreshIcon /> Actualizar</button>
         </div>
       </div>
-      <div className="last-updated">Ultima actualizacion: {lastUpdated.toLocaleTimeString()}</div>
-
       {error && <div className="error-box">{error}</div>}
-
-      <div className="stats-cards">
-        <div className="stat-card lost">
-          <span className="stat-icon"><Dog size={40} /></span>
-          <div className="stat-content">
-            <span className="stat-value">{data?.lostPets || 0}</span>
-            <span className="stat-label">Mascotas Perdidas</span>
-          </div>
-        </div>
-        <div className="stat-card found">
-          <span className="stat-icon"><Dog size={40} /></span>
-          <div className="stat-content">
-            <span className="stat-value">{data?.foundPets || 0}</span>
-            <span className="stat-label">Mascotas Encontradas</span>
-          </div>
-        </div>
-        <div className="stat-card matches">
-          <span className="stat-icon"><GitMerge size={40} /></span>
-          <div className="stat-content">
-            <span className="stat-value">{data?.pendingMatches || 0}</span>
-            <span className="stat-label">Coincidencias Pendientes</span>
-          </div>
-        </div>
-        <div className="stat-card locations">
-          <span className="stat-icon"><MapPin size={40} /></span>
-          <div className="stat-content">
-            <span className="stat-value">{data?.totalLocations || 0}</span>
-            <span className="stat-label">Total Ubicaciones</span>
-          </div>
-        </div>
+      <div className="stats-grid">
+        <div className="stat-card"><div className="stat-label"><PawPrint size={14} /> Perdidas</div><div className="stat-value">{data?.lostPets ?? 0}</div></div>
+        <div className="stat-card"><div className="stat-label"><PawPrint size={14} /> Encontradas</div><div className="stat-value">{data?.foundPets ?? 0}</div></div>
+        <div className="stat-card"><div className="stat-label"><Link2 size={14} /> Coincidencias pendientes</div><div className="stat-value">{data?.pendingMatches ?? 0}</div></div>
+        <div className="stat-card"><div className="stat-label"><MapPin size={14} /> Total ubicaciones</div><div className="stat-value">{data?.totalLocations ?? 0}</div></div>
       </div>
-
       {data?.locationsByZone && Object.keys(data.locationsByZone).length > 0 && (
         <div className="zones-section">
-          <h3><MapPin className="section-icon" /> Reportes por Zona</h3>
-          <div className="zones-list">
-            {Object.entries(data.locationsByZone).map(([zone, count]) => (
-              <div key={zone} className="zone-item">
-                <span className="zone-name"><MapPin size={14} /> {zone}</span>
-                <span className="zone-badge">{count} reportes</span>
-              </div>
+          <h3>Reportes por zona</h3>
+          <div className="zones-grid">
+            {Object.entries(data.locationsByZone).map(([z, c]) => (
+              <div key={z} className="zone-chip" onClick={() => onNavigate(z)} style={{ cursor: 'pointer' }}><span>{z}</span><span className="zone-count">{c as number}</span></div>
             ))}
           </div>
         </div>
       )}
-    </div>
-  );
+    </>
+  )
 }
 
-function PetsView({ baseUrl }: { baseUrl: string }) {
-  const [pets, setPets] = useState<any[]>([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
-  const [showForm, setShowForm] = useState(false);
-  const [editingPet, setEditingPet] = useState<any>(null);
-  const [autoRefresh, setAutoRefresh] = useState(true);
-  const intervalRef = useRef<NodeJS.Timeout | null>(null);
+function PetsView() {
+  const [pets, setPets] = useState<any[]>([])
+  const [loading, setLoading] = useState(true)
+  const [error, setError] = useState<string | null>(null)
+  const [showForm, setShowForm] = useState(false)
+  const [editing, setEditing] = useState<any>(null)
 
   const fetchPets = async () => {
-    setLoading(true);
-    setError(null);
+    setLoading(true); setError(null)
     try {
-      const res = await fetch(`${baseUrl}/pets`);
-      if (!res.ok) throw new Error(`Error ${res.status}`);
-      const json = await res.json();
-      setPets(Array.isArray(json) ? json : json.content || []);
-    } catch (err: any) {
-      setError(err.message);
-    } finally {
-      setLoading(false);
-    }
-  };
+      const r = await fetch(`${API}/pets`)
+      if (!r.ok) throw new Error(`Error ${r.status}`)
+      const json = await r.json()
+      setPets(Array.isArray(json) ? json : [])
+    } catch (e: any) { setError(e.message) }
+    finally { setLoading(false) }
+  }
 
-  useEffect(() => {
-    fetchPets();
-  }, []);
+  useEffect(() => { fetchPets() }, [])
 
-  useEffect(() => {
-    if (intervalRef.current) clearInterval(intervalRef.current);
-    if (autoRefresh) {
-      intervalRef.current = setInterval(fetchPets, 5000);
-    }
-    return () => {
-      if (intervalRef.current) clearInterval(intervalRef.current);
-    };
-  }, [autoRefresh]);
+  const del = async (id: number) => {
+    if (!confirm('Eliminar esta mascota?')) return
+    try { await fetch(`${API}/pets/${id}`, { method: 'DELETE' }); fetchPets() }
+    catch { alert('Error') }
+  }
 
-  const deletePet = async (id: number) => {
-    if (!confirm('Eliminar esta mascota?')) return;
-    try {
-      const res = await fetch(`${baseUrl}/pets/${id}`, { method: 'DELETE' });
-      if (res.ok) fetchPets();
-      else alert('Error al eliminar');
-    } catch {
-      alert('Error al eliminar');
-    }
-  };
+  if (loading && pets.length === 0) return <div className="loading">Cargando mascotas...</div>
 
   return (
-    <div className="view-container">
-      <div className="view-header">
-        <h2><Dog className="section-icon" /> Mascotas</h2>
-        <div className="controls">
-          <label className="auto-refresh-toggle">
-            <input type="checkbox" checked={autoRefresh} onChange={e => setAutoRefresh(e.target.checked)} />
-            Auto-actualizar
-          </label>
-          <button onClick={fetchPets} className="refresh-btn">
-            <RefreshCw size={16} /> Actualizar
-          </button>
-          <button onClick={() => { setEditingPet(null); setShowForm(true); }} className="add-btn">
-            <Plus size={16} /> Agregar
-          </button>
+    <>
+      <div className="main-header">
+        <h2>Mascotas</h2>
+        <div className="header-actions">
+          <button className="btn" onClick={fetchPets}><RefreshIcon /> Actualizar</button>
+          <button className="btn btn-primary" onClick={() => { setEditing(null); setShowForm(true) }}>+ Nueva</button>
         </div>
       </div>
-
       {error && <div className="error-box">{error}</div>}
-
-      {showForm && (
-        <PetForm
-          baseUrl={baseUrl}
-          pet={editingPet}
-          onClose={() => { setShowForm(false); setEditingPet(null); }}
-          onSave={() => { setShowForm(false); fetchPets(); }}
-        />
-      )}
-
-      <div className="data-table">
+      {showForm && <PetForm pet={editing} onClose={() => { setShowForm(false); setEditing(null) }} onSave={() => { setShowForm(false); fetchPets() }} />}
+      <div className="table-container">
         <table>
           <thead>
             <tr>
@@ -258,193 +191,120 @@ function PetsView({ baseUrl }: { baseUrl: string }) {
               <th>Nombre</th>
               <th>Raza</th>
               <th>Color</th>
-              <th>Tamano</th>
+              <th>Tamaño</th>
               <th>Estado</th>
-              <th>Descripcion</th>
+              <th>Descripción</th>
               <th>Acciones</th>
             </tr>
           </thead>
           <tbody>
-            {pets.map(pet => (
-              <tr key={pet.id}>
-                <td>{pet.id}</td>
-                <td>{pet.name || '-'}</td>
-                <td>{pet.race || '-'}</td>
-                <td>{pet.color || '-'}</td>
-                <td>{pet.size || '-'}</td>
-                <td><span className={`status-badge ${pet.status?.toLowerCase()}`}>{translateStatus(pet.status)}</span></td>
-                <td>{pet.description?.substring(0, 50) || '-'}...</td>
+            {pets.map(p => (
+              <tr key={p.id}>
+                <td>{p.id}</td>
+                <td>{p.name || '-'}</td>
+                <td>{p.race || '-'}</td>
+                <td>{p.color || '-'}</td>
+                <td>{p.size || '-'}</td>
+                <td><span className={`status-badge ${(p.status || '').toLowerCase()}`}>{statusLabel(p.status)}</span></td>
+                <td style={{ maxWidth: 200, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{p.description || '-'}</td>
                 <td>
-                  <button onClick={() => { setEditingPet(pet); setShowForm(true); }} className="edit-btn">
-                    <Edit size={14} /> Editar
-                  </button>
-                  <button onClick={() => deletePet(pet.id)} className="delete-btn">
-                    <Trash2 size={14} /> Eliminar
-                  </button>
+                  <button className="btn" onClick={() => { setEditing(p); setShowForm(true) }}>Editar</button>
+                  <button className="btn btn-danger" onClick={() => del(p.id)}>Eliminar</button>
                 </td>
               </tr>
             ))}
-            {pets.length === 0 && <tr><td colSpan={8}>No hay mascotas</td></tr>}
+            {pets.length === 0 && <tr className="empty"><td colSpan={8}>No hay mascotas registradas</td></tr>}
           </tbody>
         </table>
       </div>
-    </div>
-  );
+    </>
+  )
 }
 
-function PetForm({ baseUrl, pet, onClose, onSave }: { baseUrl: string; pet: any; onClose: () => void; onSave: () => void }) {
-  const [form, setForm] = useState({
-    name: pet?.name || '',
-    race: pet?.race || '',
-    color: pet?.color || '',
-    size: pet?.size || '',
-    status: pet?.status || 'LOST',
-    description: pet?.description || '',
-  });
-  const [saving, setSaving] = useState(false);
+function PetForm({ pet, onClose, onSave }: { pet: any; onClose: () => void; onSave: () => void }) {
+  const [form, setForm] = useState({ name: pet?.name || '', race: pet?.race || '', color: pet?.color || '', size: pet?.size || '', status: pet?.status || 'PERDIDO', description: pet?.description || '' })
+  const [saving, setSaving] = useState(false)
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    setSaving(true);
+  const submit = async (e: React.FormEvent) => {
+    e.preventDefault(); setSaving(true)
     try {
-      const url = pet ? `${baseUrl}/pets/${pet.id}` : `${baseUrl}/pets`;
-      const method = pet ? 'PUT' : 'POST';
-      const res = await fetch(url, {
-        method,
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(form),
-      });
-      if (res.ok) onSave();
-      else alert('Error al guardar');
-    } catch {
-      alert('Error al guardar');
-    } finally {
-      setSaving(false);
-    }
-  };
+      const url = pet ? `${API}/pets/${pet.id}` : `${API}/pets`
+      const r = await fetch(url, { method: pet ? 'PUT' : 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(form) })
+      if (r.ok) onSave(); else alert('Error')
+    } catch { alert('Error') }
+    finally { setSaving(false) }
+  }
 
   return (
-    <div className="modal-overlay">
-      <div className="modal">
-        <h3>{pet ? 'Editar Mascota' : 'Nueva Mascota'}</h3>
-        <form onSubmit={handleSubmit}>
+    <div className="modal-overlay" onClick={onClose}>
+      <div className="modal" onClick={e => e.stopPropagation()}>
+        <h3>{pet ? 'Editar mascota' : 'Nueva mascota'}</h3>
+        <form onSubmit={submit}>
           <div className="form-row">
-            <input type="text" placeholder="Nombre" value={form.name} onChange={e => setForm({...form, name: e.target.value})} required />
-            <input type="text" placeholder="Raza" value={form.race} onChange={e => setForm({...form, race: e.target.value})} />
+            <div className="form-group"><label>Nombre</label><input value={form.name} onChange={e => setForm({...form, name: e.target.value})} required /></div>
+            <div className="form-group"><label>Raza</label><input value={form.race} onChange={e => setForm({...form, race: e.target.value})} /></div>
           </div>
           <div className="form-row">
-            <input type="text" placeholder="Color" value={form.color} onChange={e => setForm({...form, color: e.target.value})} />
-            <select value={form.size} onChange={e => setForm({...form, size: e.target.value})}>
-              <option value="">Tamano</option>
-              <option value="SMALL">Pequeno</option>
-              <option value="MEDIUM">Mediano</option>
-              <option value="LARGE">Grande</option>
-            </select>
+            <div className="form-group"><label>Color</label><input value={form.color} onChange={e => setForm({...form, color: e.target.value})} /></div>
+            <div className="form-group"><label>Tamaño</label><select value={form.size} onChange={e => setForm({...form, size: e.target.value})}><option value="">Seleccionar</option><option value="PEQUENO">Pequeño</option><option value="MEDIANO">Mediano</option><option value="GRANDE">Grande</option></select></div>
           </div>
-          <div className="form-row">
-            <select value={form.status} onChange={e => setForm({...form, status: e.target.value})}>
-              <option value="LOST">Perdido</option>
-              <option value="FOUND">Encontrado</option>
-            </select>
-          </div>
-          <textarea placeholder="Descripcion" value={form.description} onChange={e => setForm({...form, description: e.target.value})} rows={3} />
+          <div className="form-group"><label>Estado</label><select value={form.status} onChange={e => setForm({...form, status: e.target.value})}><option value="PERDIDO">Perdido</option><option value="ENCONTRADO">Encontrado</option></select></div>
+          <div className="form-group"><label>Descripción</label><textarea value={form.description} onChange={e => setForm({...form, description: e.target.value})} rows={3} /></div>
           <div className="form-actions">
-            <button type="button" onClick={onClose} className="cancel-btn">
-              <X size={16} /> Cancelar
-            </button>
-            <button type="submit" disabled={saving} className="save-btn">
-              {saving ? <Loader2 className="spin" /> : <Check size={16} />} Guardar
-            </button>
+            <button type="button" className="btn" onClick={onClose}>Cancelar</button>
+            <button type="submit" className="btn btn-primary" disabled={saving}>{saving ? 'Guardando...' : 'Guardar'}</button>
           </div>
         </form>
       </div>
     </div>
-  );
+  )
 }
 
-function MatchesView({ baseUrl }: { baseUrl: string }) {
-  const [matches, setMatches] = useState<any[]>([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
-  const [autoRefresh, setAutoRefresh] = useState(true);
-  const intervalRef = useRef<NodeJS.Timeout | null>(null);
+function MatchesView() {
+  const [matches, setMatches] = useState<any[]>([])
+  const [loading, setLoading] = useState(true)
+  const [error, setError] = useState<string | null>(null)
 
   const fetchMatches = async () => {
-    setLoading(true);
-    setError(null);
+    setLoading(true); setError(null)
     try {
-      const res = await fetch(`${baseUrl}/matches`);
-      if (!res.ok) throw new Error(`Error ${res.status}`);
-      const json = await res.json();
-      setMatches(Array.isArray(json) ? json : json.content || []);
-    } catch (err: any) {
-      setError(err.message);
-    } finally {
-      setLoading(false);
-    }
-  };
+      const r = await fetch(`${API}/matches`)
+      if (!r.ok) throw new Error(`Error ${r.status}`)
+      const json = await r.json()
+      setMatches(Array.isArray(json) ? json : json.content || [])
+    } catch (e: any) { setError(e.message) }
+    finally { setLoading(false) }
+  }
 
-  useEffect(() => {
-    fetchMatches();
-  }, []);
+  useEffect(() => { fetchMatches() }, [])
 
-  useEffect(() => {
-    if (intervalRef.current) clearInterval(intervalRef.current);
-    if (autoRefresh) {
-      intervalRef.current = setInterval(fetchMatches, 5000);
-    }
-    return () => {
-      if (intervalRef.current) clearInterval(intervalRef.current);
-    };
-  }, [autoRefresh]);
+  const confirmMatch = async (id: number) => { try { await fetch(`${API}/matches/${id}/confirm`, { method: 'PUT' }); fetchMatches() } catch { alert('Error') } }
+  const rejectMatch = async (id: number) => { try { await fetch(`${API}/matches/${id}/reject`, { method: 'PUT' }); fetchMatches() } catch { alert('Error') } }
+  const del = async (id: number) => { if (!window.confirm('Eliminar coincidencia?')) return; try { await fetch(`${API}/matches/${id}`, { method: 'DELETE' }); fetchMatches() } catch { alert('Error') } }
+  const runAuto = async () => { try { await fetch(`${API}/matches/run-automatic`, { method: 'POST' }); fetchMatches() } catch { alert('Error') } }
 
-  const confirmMatch = async (id: number) => {
-    try {
-      const res = await fetch(`${baseUrl}/matches/${id}/confirm`, { method: 'PUT' });
-      if (res.ok) fetchMatches();
-    } catch { alert('Error'); }
-  };
-
-  const rejectMatch = async (id: number) => {
-    try {
-      const res = await fetch(`${baseUrl}/matches/${id}/reject`, { method: 'PUT' });
-      if (res.ok) fetchMatches();
-    } catch { alert('Error'); }
-  };
-
-  const deleteMatch = async (id: number) => {
-    if (!confirm('Eliminar esta coincidencia?')) return;
-    try {
-      const res = await fetch(`${baseUrl}/matches/${id}`, { method: 'DELETE' });
-      if (res.ok) fetchMatches();
-    } catch { alert('Error'); }
-  };
+  if (loading && matches.length === 0) return <div className="loading">Cargando coincidencias...</div>
 
   return (
-    <div className="view-container">
-      <div className="view-header">
-        <h2><GitMerge className="section-icon" /> Coincidencias</h2>
-        <div className="controls">
-          <label className="auto-refresh-toggle">
-            <input type="checkbox" checked={autoRefresh} onChange={e => setAutoRefresh(e.target.checked)} />
-            Auto-actualizar
-          </label>
-          <button onClick={fetchMatches} className="refresh-btn">
-            <RefreshCw size={16} /> Actualizar
-          </button>
+    <>
+      <div className="main-header">
+        <h2>Coincidencias</h2>
+        <div className="header-actions">
+          <button className="btn" onClick={fetchMatches}><RefreshIcon /> Actualizar</button>
+          <button className="btn btn-primary" onClick={runAuto}><Zap size={14} /> Matching automático</button>
         </div>
       </div>
-
       {error && <div className="error-box">{error}</div>}
-
-      <div className="data-table">
+      <div className="table-container">
         <table>
           <thead>
             <tr>
               <th>ID</th>
               <th>Mascota Perdida</th>
+              <th>ID Perdido</th>
               <th>Mascota Encontrada</th>
-              <th>Similitud</th>
+              <th>ID Encontrado</th>
+              <th>% Similitud</th>
               <th>Estado</th>
               <th>Acciones</th>
             </tr>
@@ -453,98 +313,60 @@ function MatchesView({ baseUrl }: { baseUrl: string }) {
             {matches.map(m => (
               <tr key={m.id}>
                 <td>{m.id}</td>
-                <td>{m.petLostName || m.petLostId || '-'}</td>
-                <td>{m.petFoundName || m.petFoundId || '-'}</td>
-                <td>{m.similarity ? `${(m.similarity * 100).toFixed(0)}%` : '-'}</td>
-                <td><span className={`status-badge ${m.status?.toLowerCase() || 'pending'}`}>{translateStatus(m.status)}</span></td>
+                <td>{m.petLostName || '-'}</td>
+                <td>{m.petLostId || '-'}</td>
+                <td>{m.petFoundName || '-'}</td>
+                <td>{m.petFoundId || '-'}</td>
+                <td>{m.porcentajeCoincidencia != null ? `${m.porcentajeCoincidencia}%` : (m.similarity ? `${(m.similarity * 100).toFixed(0)}%` : '-')}</td>
+                <td><span className={`status-badge ${(m.status || 'pendiente').toLowerCase()}`}>{statusLabel(m.status)}</span></td>
                 <td>
-                  {m.status === 'PENDING' && (
-                    <>
-                      <button onClick={() => confirmMatch(m.id)} className="confirm-btn">
-                        <Check size={14} /> Confirmar
-                      </button>
-                      <button onClick={() => rejectMatch(m.id)} className="reject-btn">
-                        <X size={14} /> Rechazar
-                      </button>
-                    </>
-                  )}
-                  <button onClick={() => deleteMatch(m.id)} className="delete-btn">
-                    <Trash2 size={14} /> Eliminar
-                  </button>
+                  {(!m.status || m.status === 'PENDIENTE') && <><button className="btn btn-success" onClick={() => confirmMatch(m.id)}><Check size={14} /> Confirmar</button><button className="btn btn-warning" onClick={() => rejectMatch(m.id)}><X size={14} /> Rechazar</button></>}
+                  <button className="btn btn-danger" onClick={() => del(m.id)}>Eliminar</button>
                 </td>
               </tr>
             ))}
-            {matches.length === 0 && <tr><td colSpan={6}>No hay coincidencias</td></tr>}
+            {matches.length === 0 && <tr className="empty"><td colSpan={8}>No hay coincidencias. Usa "Matching automático" para generar.</td></tr>}
           </tbody>
         </table>
       </div>
-    </div>
-  );
+    </>
+  )
 }
 
-function LocationsView({ baseUrl }: { baseUrl: string }) {
-  const [locations, setLocations] = useState<any[]>([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
-  const [showForm, setShowForm] = useState(false);
-  const [autoRefresh, setAutoRefresh] = useState(true);
-  const intervalRef = useRef<NodeJS.Timeout | null>(null);
+function LocationsView({ zoneFilter }: { zoneFilter: string | null }) {
+  const [locations, setLocations] = useState<any[]>([])
+  const [loading, setLoading] = useState(true)
+  const [error, setError] = useState<string | null>(null)
 
   const fetchLocations = async () => {
-    setLoading(true);
-    setError(null);
+    setLoading(true); setError(null)
     try {
-      const res = await fetch(`${baseUrl}/locations`);
-      if (!res.ok) throw new Error(`Error ${res.status}`);
-      const json = await res.json();
-      setLocations(Array.isArray(json) ? json : json.content || []);
-    } catch (err: any) {
-      setError(err.message);
-    } finally {
-      setLoading(false);
-    }
-  };
+      const r = await fetch(`${API}/locations`)
+      if (!r.ok) throw new Error(`Error ${r.status}`)
+      const json = await r.json()
+      setLocations(Array.isArray(json) ? json : [])
+    } catch (e: any) { setError(e.message) }
+    finally { setLoading(false) }
+  }
 
-  useEffect(() => {
-    fetchLocations();
-  }, []);
+  useEffect(() => { fetchLocations() }, [])
 
-  useEffect(() => {
-    if (intervalRef.current) clearInterval(intervalRef.current);
-    if (autoRefresh) {
-      intervalRef.current = setInterval(fetchLocations, 5000);
-    }
-    return () => {
-      if (intervalRef.current) clearInterval(intervalRef.current);
-    };
-  }, [autoRefresh]);
+  const del = async (id: number) => { if (!confirm('Eliminar ubicación?')) return; try { await fetch(`${API}/locations/${id}`, { method: 'DELETE' }); fetchLocations() } catch { alert('Error') } }
 
-  const deleteLocation = async (id: number) => {
-    if (!confirm('Eliminar esta ubicacion?')) return;
-    try {
-      const res = await fetch(`${baseUrl}/locations/${id}`, { method: 'DELETE' });
-      if (res.ok) fetchLocations();
-    } catch { alert('Error'); }
-  };
+  const filtered = zoneFilter ? locations.filter(l => l.zone === zoneFilter) : locations
+
+  if (loading && locations.length === 0) return <div className="loading">Cargando ubicaciones...</div>
 
   return (
-    <div className="view-container">
-      <div className="view-header">
-        <h2><MapPin className="section-icon" /> Ubicaciones</h2>
-        <div className="controls">
-          <label className="auto-refresh-toggle">
-            <input type="checkbox" checked={autoRefresh} onChange={e => setAutoRefresh(e.target.checked)} />
-            Auto-actualizar
-          </label>
-          <button onClick={fetchLocations} className="refresh-btn">
-            <RefreshCw size={16} /> Actualizar
-          </button>
+    <>
+      <div className="main-header">
+        <h2>Ubicaciones{zoneFilter ? ` - ${zoneFilter}` : ''}</h2>
+        <div className="header-actions">
+          <button className="btn" onClick={fetchLocations}><RefreshIcon /> Actualizar</button>
         </div>
       </div>
-
       {error && <div className="error-box">{error}</div>}
-
-      <div className="data-table">
+      <div className="table-container">
         <table>
           <thead>
             <tr>
@@ -552,31 +374,31 @@ function LocationsView({ baseUrl }: { baseUrl: string }) {
               <th>Latitud</th>
               <th>Longitud</th>
               <th>Zona</th>
+              <th>Mapa</th>
               <th>Pet ID</th>
               <th>Acciones</th>
             </tr>
           </thead>
           <tbody>
-            {locations.map(loc => (
-              <tr key={loc.id}>
-                <td>{loc.id}</td>
-                <td>{loc.latitude}</td>
-                <td>{loc.longitude}</td>
-                <td>{loc.zone || 'Sin zona'}</td>
-                <td>{loc.petId || '-'}</td>
-                <td>
-                  <button onClick={() => deleteLocation(loc.id)} className="delete-btn">
-                    <Trash2 size={14} /> Eliminar
-                  </button>
-                </td>
+            {filtered.map(l => (
+              <tr key={l.id}>
+                <td>{l.id}</td>
+                <td>{l.latitude}</td>
+                <td>{l.longitude}</td>
+                <td>{l.zone || 'Sin zona'}</td>
+                <td><a href={`https://www.google.com/maps?q=${l.latitude},${l.longitude}`} target="_blank" rel="noopener noreferrer" className="btn btn-map"><MapPin size={14} /></a></td>
+                <td>{l.petId || '-'}</td>
+                <td><button className="btn btn-danger" onClick={() => del(l.id)}>Eliminar</button></td>
               </tr>
             ))}
-            {locations.length === 0 && <tr><td colSpan={6}>No hay ubicaciones</td></tr>}
+            {filtered.length === 0 && <tr className="empty"><td colSpan={7}>No hay ubicaciones{zoneFilter ? ` en ${zoneFilter}` : ''}</td></tr>}
           </tbody>
         </table>
       </div>
-    </div>
-  );
+    </>
+  )
 }
 
-export default App;
+function RefreshIcon() {
+  return <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polyline points="23 4 23 10 17 10"/><polyline points="1 20 1 14 7 14"/><path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"/></svg>
+}
