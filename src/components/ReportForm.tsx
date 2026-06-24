@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef } from 'react'
-import { MapPin, PawPrint, Send, ArrowLeft } from 'lucide-react'
+import { MapPin, PawPrint, Send, ArrowLeft, CheckCircle } from 'lucide-react'
 import L from 'leaflet'
 import 'leaflet/dist/leaflet.css'
 
@@ -27,6 +27,11 @@ function createDefaultMarkerIcon() {
     popupAnchor: [1, -34],
     shadowSize: [41, 41],
   })
+}
+
+const statusHeroConfig: Record<string, { title: string; subtitle: string; gradient: string }> = {
+  PERDIDO: { title: 'Reportar mascota perdida', subtitle: 'Ayúdanos a encontrar a tu mascota', gradient: 'linear-gradient(135deg, #d32f2f, #b71c1c)' },
+  ENCONTRADO: { title: 'Reportar mascota encontrada', subtitle: 'Ayuda a que esta mascota vuelva a casa', gradient: 'linear-gradient(135deg, #2e7d32, #1b5e20)' },
 }
 
 export default function ReportForm({
@@ -116,12 +121,17 @@ export default function ReportForm({
     finally { setSaving(false) }
   }
 
+  const heroCfg = statusHeroConfig[form.status] || statusHeroConfig.PERDIDO
+
   if (done) {
     return (
       <div className="public-page">
-        <div className="success-box" style={{ textAlign: 'center', padding: 40 }}>
-          <h2>¡Reporte creado con éxito!</h2>
-          <p>Gracias por ayudar. Pronto redirigiremos al inicio.</p>
+        <div className="report-form-container">
+          <div className="report-success-card">
+            <CheckCircle size={48} />
+            <h2>¡Reporte creado con éxito!</h2>
+            <p>Gracias por ayudar. Pronto redirigiremos al inicio.</p>
+          </div>
         </div>
       </div>
     )
@@ -130,7 +140,12 @@ export default function ReportForm({
   return (
     <div className="public-page">
       <div className="report-form-container">
-        <button className="btn" onClick={onBack} style={{ marginBottom: 16 }}><ArrowLeft size={14} /> Volver</button>
+        <div className="report-hero" style={{ background: heroCfg.gradient }}>
+          <button className="report-hero-back" onClick={onBack}><ArrowLeft size={16} /> Volver</button>
+          <h2>{heroCfg.title}</h2>
+          <p>{heroCfg.subtitle}</p>
+        </div>
+
         <div className="steps-bar">
           <div className={`step-indicator ${step >= 1 ? 'active' : ''}`}><span>1</span> Datos</div>
           <div className="step-line" />
@@ -142,8 +157,8 @@ export default function ReportForm({
         {error && <div className="error-box">{error}</div>}
 
         {step === 1 && (
-          <div className="form-step">
-            <h3>Información de la mascota</h3>
+          <div className="report-step-card">
+            <h3><PawPrint size={18} /> Información de la mascota</h3>
             <div className="form-group">
               <label>Nombre de la mascota</label>
               <input value={form.name} onChange={e => set('name', e.target.value)} placeholder="Ej: Luna" />
@@ -179,16 +194,16 @@ export default function ReportForm({
               </div>
             </div>
             <div className="form-actions">
-              <button className="btn btn-primary" onClick={() => setStep(2)} disabled={!form.name || !form.breed || !form.color}>
-                Siguiente <PawPrint size={14} />
+              <button className="report-btn report-btn-primary" onClick={() => setStep(2)} disabled={!form.name || !form.breed || !form.color}>
+                Siguiente <PawPrint size={16} />
               </button>
             </div>
           </div>
         )}
 
         {step === 2 && (
-          <div className="form-step">
-            <h3>Descripción y contacto</h3>
+          <div className="report-step-card">
+            <h3><MapPin size={18} /> Descripción y contacto</h3>
             <div className="form-group">
               <label>Descripción adicional</label>
               <textarea value={form.description} onChange={e => set('description', e.target.value)} rows={3} placeholder="Señas particulares, última vez visto, etc." />
@@ -208,24 +223,24 @@ export default function ReportForm({
               </div>
             </div>
             <div className="form-actions">
-              <button className="btn" onClick={() => setStep(1)}>Atrás</button>
-              <button className="btn btn-primary" onClick={() => setStep(3)}>
-                Siguiente <MapPin size={14} />
+              <button className="report-btn" onClick={() => setStep(1)}>Atrás</button>
+              <button className="report-btn report-btn-primary" onClick={() => setStep(3)}>
+                Siguiente <MapPin size={16} />
               </button>
             </div>
           </div>
         )}
 
         {step === 3 && (
-          <div className="form-step">
-            <h3>Marca la ubicación en el mapa</h3>
+          <div className="report-step-card">
+            <h3><MapPin size={18} /> Marca la ubicación</h3>
             <p className="form-hint">Haz clic en el mapa donde viste por última vez a la mascota</p>
             {lat && lng && <p className="form-coords">Ubicación: {lat.toFixed(4)}, {lng.toFixed(4)}</p>}
             <div ref={mapRef} className="report-map" />
             <div className="form-actions">
-              <button className="btn" onClick={() => setStep(2)}>Atrás</button>
-              <button className="btn btn-primary" onClick={submit} disabled={saving || !lat || !lng}>
-                <Send size={14} /> {saving ? 'Guardando...' : 'Publicar reporte'}
+              <button className="report-btn" onClick={() => setStep(2)}>Atrás</button>
+              <button className="report-btn report-btn-primary" onClick={submit} disabled={saving || !lat || !lng}>
+                <Send size={16} /> {saving ? 'Guardando...' : 'Publicar reporte'}
               </button>
             </div>
           </div>
