@@ -2,7 +2,7 @@ import { useState, useEffect, useRef } from 'react'
 import L from 'leaflet'
 import 'leaflet/dist/leaflet.css'
 
-const API = '/api'
+const API = import.meta.env.VITE_API_URL || '/api'
 
 function createMarkerIcon(color: string) {
   const svgIcon = L.divIcon({

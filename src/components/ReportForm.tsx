@@ -3,7 +3,7 @@ import { MapPin, PawPrint, Send, ArrowLeft, CheckCircle } from 'lucide-react'
 import L from 'leaflet'
 import 'leaflet/dist/leaflet.css'
 
-const API = '/api'
+const API = import.meta.env.VITE_API_URL || '/api'
 
 const COLORS = ['Negro', 'Blanco', 'Marron', 'Gris', 'Dorado', 'Crema', 'Naranja', 'Atigrado', 'Tricolor', 'Otro']
 const SIZES = ['PEQUENO', 'MEDIANO', 'GRANDE']

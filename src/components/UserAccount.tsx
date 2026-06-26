@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react'
 import { PawPrint, Edit3, Trash2, Check, X, User } from 'lucide-react'
 
-const API = '/api'
+const API = import.meta.env.VITE_API_URL || '/api'
 
 const statusLabel = (s?: string) => {
   switch (s) {

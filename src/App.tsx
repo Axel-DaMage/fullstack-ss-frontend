@@ -8,7 +8,7 @@ import InteractiveMap from './components/InteractiveMap'
 import UserAccount from './components/UserAccount'
 
 type Section = 'home' | 'report' | 'gallery' | 'radar' | 'account' | 'pet-detail' | 'admin-dashboard' | 'admin-pets' | 'admin-matches' | 'admin-locations'
-const API = '/api'
+const API = import.meta.env.VITE_API_URL || '/api'
 
 const statusLabel = (s?: string) => {
   switch (s) {
