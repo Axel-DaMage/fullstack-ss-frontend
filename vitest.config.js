@@ -6,11 +6,11 @@ export default defineConfig({
   test: {
     globals: true,
     environment: 'jsdom',
-    setupFiles: [],
+    setupFiles: ['./src/setup.js'],
     coverage: {
       reporter: ['text', 'json', 'html'],
       include: ['src/**/*.{js,jsx,ts,tsx}'],
-      exclude: ['src/main.jsx', 'src/App.jsx']
+      exclude: ['src/main.jsx', 'src/App.tsx']
     }
   }
 });
