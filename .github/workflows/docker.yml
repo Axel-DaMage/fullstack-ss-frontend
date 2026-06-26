@@ -1,26 +1,15 @@
-name: Build and Push Docker Image
+name: Docker Build & Push - Frontend
 
 on:
   push:
-    branches: [ main ]
+    branches: [ main, develop ]
+  workflow_dispatch:
 
 jobs:
-  build-and-push:
+  docker:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-
-      - name: Setup Node.js
-        uses: actions/setup-node@v4
-        with:
-          node-version: '20'
-          cache: 'npm'
-
-      - name: Install dependencies
-        run: npm ci
-
-      - name: Build
-        run: npm run build
 
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v3
@@ -31,9 +20,13 @@ jobs:
           username: ${{ secrets.DOCKER_USERNAME }}
           password: ${{ secrets.DOCKER_PASSWORD }}
 
-      - name: Build and push
+      - name: Build and push to Docker Hub
         uses: docker/build-push-action@v5
         with:
           context: .
           push: true
-          tags: axeldamage/fullstack-ss-frontend:latest
+          tags: |
+            d4mag3/fullstack-ss-frontend:latest
+            d4mag3/fullstack-ss-frontend:${{ github.sha }}
+          cache-from: type=gha
+          cache-to: type=gha,mode=max

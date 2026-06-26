@@ -1,0 +1,12 @@
+.git
+.github
+.gitignore
+node_modules
+dist
+README.md
+docker-compose*.yml
+.dockerignore
+*.txt
+*.json.bak
+issue10*
+test_output*

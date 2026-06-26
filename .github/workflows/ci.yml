@@ -1,4 +1,4 @@
-name: CI
+name: CI - Frontend
 
 on:
   push:
@@ -7,28 +7,33 @@ on:
     branches: [ main, develop ]
 
 jobs:
-  build:
+  build-and-test:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
 
       - name: Set up Node.js
-        uses: actions/setup-node@v3
+        uses: actions/setup-node@v4
         with:
-          node-version: '18'
+          node-version: '20'
           cache: 'npm'
 
       - name: Install dependencies
-        run: npm ci
+        run: npm ci --legacy-peer-deps
 
       - name: Lint
         run: npm run lint
+
+      - name: Test
+        run: npm run test -- --run
 
       - name: Build
         run: npm run build
 
       - name: Upload artifact
-        uses: actions/upload-artifact@v3
+        if: github.ref == 'refs/heads/main'
+        uses: actions/upload-artifact@v4
         with:
           name: frontend-dist
           path: dist
+          retention-days: 5
