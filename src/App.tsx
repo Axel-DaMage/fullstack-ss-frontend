@@ -7,7 +7,7 @@ import PetGallery from './components/PetGallery'
 import InteractiveMap from './components/InteractiveMap'
 import UserAccount from './components/UserAccount'
 
-type Section = 'home' | 'report' | 'gallery' | 'radar' | 'account' | 'admin-dashboard' | 'admin-pets' | 'admin-matches' | 'admin-locations'
+type Section = 'home' | 'report' | 'gallery' | 'radar' | 'account' | 'pet-detail' | 'admin-dashboard' | 'admin-pets' | 'admin-matches' | 'admin-locations'
 const API = '/api'
 
 const statusLabel = (s?: string) => {
@@ -27,6 +27,7 @@ export default function App() {
   const [section, setSection] = useState<Section>('home')
   const [zoneFilter, setZoneFilter] = useState<string | null>(null)
   const [reportStatus, setReportStatus] = useState<string | undefined>(undefined)
+  const [selectedPetId, setSelectedPetId] = useState<number | null>(null)
 
   const navigate = (s: string, data?: any) => {
     if (s === 'report') {
@@ -36,6 +37,11 @@ export default function App() {
       setSection(s as Section)
       setZoneFilter(null)
     }
+  }
+
+  const viewPet = (petId: number) => {
+    setSelectedPetId(petId)
+    setSection('pet-detail')
   }
 
   const goToZone = (zone: string) => {
@@ -89,7 +95,8 @@ export default function App() {
         {section === 'home' && <PublicHome onNavigate={navigate} />}
         {section === 'report' && <ReportForm initialStatus={reportStatus} onBack={() => setSection('home')} onSaved={() => setSection('home')} />}
         {section === 'gallery' && <PetGallery onBack={() => setSection('home')} />}
-        {section === 'radar' && <InteractiveMap onBack={() => setSection('home')} />}
+        {section === 'radar' && <InteractiveMap onBack={() => setSection('home')} onViewPet={viewPet} />}
+        {section === 'pet-detail' && <PetDetailView petId={selectedPetId} onBack={() => setSection('radar')} />}
         {section === 'account' && <UserAccount onBack={() => setSection('home')} />}
         {section === 'admin-dashboard' && <DashboardView onNavigate={goToZone} />}
         {section === 'admin-pets' && <PetsView />}
@@ -443,6 +450,46 @@ function LocationsView({ zoneFilter }: { zoneFilter: string | null }) {
         </table>
       </div>
     </>
+  )
+}
+
+function PetDetailView({ petId, onBack }: { petId: number | null; onBack: () => void }) {
+  const [pet, setPet] = useState<any>(null)
+  const [loading, setLoading] = useState(true)
+
+  useEffect(() => {
+    if (!petId) return
+    fetch(`${API}/pets/${petId}`)
+      .then(r => r.json())
+      .then(data => { setPet(data); setLoading(false) })
+      .catch(() => setLoading(false))
+  }, [petId])
+
+  if (loading) return <div className="loading">Cargando...</div>
+  if (!pet) return <div className="public-page"><div className="main-header"><h2>Mascota no encontrada</h2><button className="btn" onClick={onBack}>Volver</button></div></div>
+
+  return (
+    <div className="public-page">
+      <div className="main-header">
+        <h2>Detalle de mascota</h2>
+        <div className="header-actions">
+          <button className="btn" onClick={onBack}>Volver</button>
+        </div>
+      </div>
+      <div className="pet-detail-container">
+        <div className="pet-detail-avatar" style={{ textAlign: 'center', marginBottom: 16 }}>
+          <PawPrint size={64} />
+        </div>
+        <h3 style={{ textAlign: 'center', marginBottom: 16 }}>{pet.name || 'Sin nombre'}</h3>
+        <div className="pet-detail-grid">
+          <div><label>Raza</label><span>{pet.race || '-'}</span></div>
+          <div><label>Color</label><span>{pet.color || '-'}</span></div>
+          <div><label>Tamaño</label><span>{pet.size === 'PEQUENO' ? 'Pequeño' : pet.size === 'MEDIANO' ? 'Mediano' : 'Grande'}</span></div>
+          <div><label>Estado</label><span className={`status-badge ${(pet.status || '').toLowerCase()}`}>{pet.status === 'PERDIDO' ? 'Perdido' : 'Encontrado'}</span></div>
+        </div>
+        {pet.description && <p style={{ marginTop: 16, lineHeight: 1.6 }}>{pet.description}</p>}
+      </div>
+    </div>
   )
 }
 

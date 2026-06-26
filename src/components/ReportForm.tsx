@@ -58,6 +58,8 @@ export default function ReportForm({
   })
   const [lat, setLat] = useState<number | null>(null)
   const [lng, setLng] = useState<number | null>(null)
+  const [zone, setZone] = useState<string>('')
+  const [resolving, setResolving] = useState(false)
   const [saving, setSaving] = useState(false)
   const [done, setDone] = useState(false)
   const [error, setError] = useState<string | null>(null)
@@ -80,8 +82,18 @@ export default function ReportForm({
     map.on('click', (e: L.LeafletMouseEvent) => {
       setLat(e.latlng.lat)
       setLng(e.latlng.lng)
+      setZone('')
+      setResolving(true)
       if (markerRef.current) markerRef.current.remove()
       markerRef.current = L.marker([e.latlng.lat, e.latlng.lng], { icon: createDefaultMarkerIcon() }).addTo(map)
+      fetch(`https://nominatim.openstreetmap.org/reverse?format=json&lat=${e.latlng.lat}&lon=${e.latlng.lng}&addressdetails=1&accept-language=es`)
+        .then(r => r.json())
+        .then(data => {
+          const addr = data?.address || {}
+          setZone(addr.suburb || addr.city || addr.town || addr.county || addr.state_district || '')
+        })
+        .catch(() => setZone(''))
+        .finally(() => setResolving(false))
     })
 
     return () => { map.remove(); leafletMapRef.current = null }
@@ -113,7 +125,7 @@ export default function ReportForm({
       await fetch(`${API}/locations`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ petId: pet.id, latitude: lat, longitude: lng, zone: 'No especificada' }),
+        body: JSON.stringify({ petId: pet.id, latitude: lat, longitude: lng, zone: zone || 'No especificada' }),
       })
       setDone(true)
       setTimeout(() => onSaved(), 2000)
@@ -235,7 +247,7 @@ export default function ReportForm({
           <div className="report-step-card">
             <h3><MapPin size={18} /> Marca la ubicación</h3>
             <p className="form-hint">Haz clic en el mapa donde viste por última vez a la mascota</p>
-            {lat && lng && <p className="form-coords">Ubicación: {lat.toFixed(4)}, {lng.toFixed(4)}</p>}
+            {lat && lng && <p className="form-coords">Ubicación: {lat.toFixed(4)}, {lng.toFixed(4)}{zone ? ` - ${zone}` : ''}{resolving ? ' (obteniendo ubicación...)' : ''}</p>}
             <div ref={mapRef} className="report-map" />
             <div className="form-actions">
               <button className="report-btn" onClick={() => setStep(2)}>Atrás</button>

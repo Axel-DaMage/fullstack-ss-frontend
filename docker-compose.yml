@@ -1,6 +1,15 @@
 version: '3.8'
 
 services:
+  # Eureka Service Discovery
+  eureka-server:
+    build: ./fullstack-ss-eureka-server
+    container_name: eureka-server
+    ports:
+      - "8761:8761"
+    networks:
+      - sanossalvos-network
+
   # MySQL Database
   mysql-pet:
     image: mysql:8.0
@@ -55,6 +64,7 @@ services:
     ports:
       - "3001:3001"
     depends_on:
+      - eureka-server
       - mysql-pet
     networks:
       - sanossalvos-network
@@ -72,6 +82,7 @@ services:
     ports:
       - "3002:3002"
     depends_on:
+      - eureka-server
       - mysql-geo
     networks:
       - sanossalvos-network
@@ -89,6 +100,7 @@ services:
     ports:
       - "3003:3003"
     depends_on:
+      - eureka-server
       - mysql-match
     networks:
       - sanossalvos-network
@@ -106,6 +118,7 @@ services:
     ports:
       - "8081:8081"
     depends_on:
+      - eureka-server
       - pet-service
       - geo-service
       - match-service
@@ -120,6 +133,7 @@ services:
     ports:
       - "8080:8080"
     depends_on:
+      - eureka-server
       - bff
       - pet-service
       - geo-service

@@ -1,5 +1,4 @@
 import { useState, useEffect, useRef } from 'react'
-import { PawPrint, Navigation } from 'lucide-react'
 import L from 'leaflet'
 import 'leaflet/dist/leaflet.css'
 
@@ -25,11 +24,10 @@ function createMarkerIcon(color: string) {
   return svgIcon
 }
 
-export default function InteractiveMap({ onBack }: { onBack: () => void }) {
+export default function InteractiveMap({ onBack, onViewPet }: { onBack: () => void; onViewPet: (petId: number) => void }) {
   const [pets, setPets] = useState<any[]>([])
   const [locations, setLocations] = useState<any[]>([])
   const [loading, setLoading] = useState(true)
-  const [selectedPet, setSelectedPet] = useState<any>(null)
   const mapRef = useRef<HTMLDivElement>(null)
   const leafletMapRef = useRef<L.Map | null>(null)
 
@@ -69,7 +67,7 @@ export default function InteractiveMap({ onBack }: { onBack: () => void }) {
           </span><br/>
           <span style="font-size: 13px; color: #666;">${pet?.race || ''} ${pet?.color || ''}</span><br/>
           <span style="font-size: 12px; color: #999;">${loc.zone || ''}</span><br/>
-          <button onclick="document.getElementById('pet-${pet?.id}')?.click()" style="
+          <button onclick="window.__viewPet(${pet?.id})" style="
             margin-top: 8px; padding: 4px 12px;
             background: ${color}; color: white;
             border: none; border-radius: 4px;
@@ -81,21 +79,17 @@ export default function InteractiveMap({ onBack }: { onBack: () => void }) {
       bounds.push([loc.latitude, loc.longitude])
     })
 
-    // Create hidden buttons for popup interactions
-    pets.forEach(p => {
-      const btn = document.createElement('button')
-      btn.id = `pet-${p.id}`
-      btn.style.display = 'none'
-      btn.onclick = () => setSelectedPet(p)
-      document.body.appendChild(btn)
-    })
-
     if (bounds.length > 0) {
       map.fitBounds(bounds, { padding: [50, 50] })
     }
 
     return () => { map.remove(); leafletMapRef.current = null }
   }, [loading, pets, locations])
+
+  useEffect(() => {
+    (window as any).__viewPet = (id: number) => onViewPet(id)
+    return () => { delete (window as any).__viewPet }
+  }, [onViewPet])
 
   if (loading) return <div className="loading">Cargando mapa...</div>
 
@@ -112,25 +106,6 @@ export default function InteractiveMap({ onBack }: { onBack: () => void }) {
         <div className="legend-item"><span className="legend-dot legend-found" /> Encontrado</div>
       </div>
       <div ref={mapRef} className="radar-map" />
-
-      {selectedPet && (
-        <div className="modal-overlay" onClick={() => setSelectedPet(null)}>
-          <div className="modal" onClick={e => e.stopPropagation()}>
-            <div className="pet-detail-avatar"><PawPrint size={48} /></div>
-            <h3>{selectedPet.name || 'Sin nombre'}</h3>
-            <div className="pet-detail-grid">
-              <div><label>Raza</label><span>{selectedPet.race || '-'}</span></div>
-              <div><label>Color</label><span>{selectedPet.color || '-'}</span></div>
-              <div><label>Tamaño</label><span>{selectedPet.size === 'PEQUENO' ? 'Pequeño' : selectedPet.size === 'MEDIANO' ? 'Mediano' : 'Grande'}</span></div>
-              <div><label>Estado</label><span className={`status-badge ${(selectedPet.status || '').toLowerCase()}`}>{selectedPet.status === 'PERDIDO' ? 'Perdido' : 'Encontrado'}</span></div>
-            </div>
-            {selectedPet.description && <p className="pet-detail-desc">{selectedPet.description}</p>}
-            <div className="form-actions">
-              <button className="btn" onClick={() => setSelectedPet(null)}>Cerrar</button>
-            </div>
-          </div>
-        </div>
-      )}
     </div>
   )
 }
